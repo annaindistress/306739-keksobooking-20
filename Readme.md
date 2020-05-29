@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Анна Артемова](https://up.htmlacademy.ru/javascript/20/user/306739).
-* Наставник: `Неизвестно`.
+* Наставник: без наставника.
 
 ---
 
