@@ -14,12 +14,16 @@ var PIN_Y_MIN = 130;
 var PIN_Y_MAX = 630;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+var IMAGE_WIDTH = 45;
+var IMAGE_HEIGHT = 40;
 
 // Переменные
 
 var map = document.querySelector('.map');
+var mapFilters = document.querySelector('.map__filters-container');
 var pinList = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content;
+var cardTemplate = document.querySelector('#card').content;
 
 // Функция генерации случайного числа от min до max
 
@@ -75,9 +79,11 @@ var getOffersData = function (amount) {
         address: offerLocationX + ', ' + offerLocationY,
         price: 0,
         type: getRandomArrayElement(OFFER_TYPES),
+        rooms: 0,
+        guests: 0,
         checkin: getRandomArrayElement(OFFER_TIMES),
         checkout: getRandomArrayElement(OFFER_TIMES),
-        feature: getRandomArray(OFFER_FEATURES),
+        features: getRandomArray(OFFER_FEATURES),
         description: 'Строка с описанием',
         photos: getRandomArray(OFFER_PHOTOS)
       }
@@ -87,7 +93,7 @@ var getOffersData = function (amount) {
   return offers;
 };
 
-// Функция создания DOM-элемента на основе JS-объекта
+// Функция создания пин-метки на основе JS-объекта
 
 var renderPinItem = function (offerItem) {
   var pinItem = pinTemplate.cloneNode(true).querySelector('button');
@@ -101,7 +107,7 @@ var renderPinItem = function (offerItem) {
   return pinItem;
 };
 
-// Функция заполнения блока DOM-элементами на основе массива JS-объектов
+// Функция заполнения карты пин-метками на основе массива JS-объектов
 
 var renderPinList = function (offerList) {
   var fragment = document.createDocumentFragment();
@@ -113,7 +119,83 @@ var renderPinList = function (offerList) {
   pinList.appendChild(fragment);
 };
 
+// Функция отрисовки преимуществ места
+
+var renderCardFeatures = function (features) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < features.length; i++) {
+    var feature = document.createElement('li');
+    feature.classList.add('popup__feature', 'popup__feature--' + features[i]);
+    fragment.appendChild(feature);
+  }
+
+  return fragment;
+};
+
+// Функция отрисовки изображений места
+
+var renderCardImages = function (images) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < images.length; i++) {
+    var image = document.createElement('img');
+    image.classList.add('popup__photo');
+    image.src = images[i];
+    image.width = IMAGE_WIDTH;
+    image.height = IMAGE_HEIGHT;
+    image.alt = 'Фотография жилья';
+    fragment.appendChild(image);
+  }
+
+  return fragment;
+};
+
+// Функция создания карточки места на основе JS-объекта
+
+var renderCardItem = function (offerItem) {
+  var cardItem = cardTemplate.cloneNode(true).querySelector('.map__card');
+  var cardFeatures = cardItem.querySelector('.popup__features');
+  var cardImages = cardItem.querySelector('.popup__photos');
+
+  cardItem.querySelector('.popup__title').textContent = offerItem.offer.title;
+  cardItem.querySelector('.popup__text--address').textContent = offerItem.offer.address;
+  cardItem.querySelector('.popup__text--price').textContent = offerItem.offer.price + '₽/ночь';
+
+  switch (offerItem.offer.type) {
+    case 'palace':
+      cardItem.querySelector('.popup__type').textContent = 'Дворец';
+      break;
+    case 'flat':
+      cardItem.querySelector('.popup__type').textContent = 'Квартира';
+      break;
+    case 'house':
+      cardItem.querySelector('.popup__type').textContent = 'Дом';
+      break;
+    case 'bungalo':
+      cardItem.querySelector('.popup__type').textContent = 'Бунгало';
+      break;
+  }
+
+  cardItem.querySelector('.popup__text--capacity').textContent = offerItem.offer.rooms + ' комнаты для ' + offerItem.offer.guests + ' гостей';
+  cardItem.querySelector('.popup__text--time').textContent = 'Заезд после ' + offerItem.offer.checkin + ', выезд до ' + offerItem.offer.checkout;
+
+  cardFeatures.innerHTML = '';
+  cardFeatures.appendChild(renderCardFeatures(offerItem.offer.features));
+
+  cardItem.querySelector('.popup__description').textContent = offerItem.offer.description;
+
+  cardImages.innerHTML = '';
+  cardImages.appendChild(renderCardImages(offerItem.offer.photos));
+
+  cardItem.querySelector('.popup__avatar').src = offerItem.author.avatar;
+
+  return cardItem;
+};
+
 // Основная часть
 
 map.classList.remove('map--faded');
-renderPinList(getOffersData(OFFER_AMOUNT));
+var offers = getOffersData(OFFER_AMOUNT);
+renderPinList(offers);
+mapFilters.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
