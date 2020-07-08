@@ -20,8 +20,13 @@ var IMAGE_HEIGHT = 40;
 // Переменные
 
 var map = document.querySelector('.map');
-var mapFilters = document.querySelector('.map__filters-container');
 var pinList = document.querySelector('.map__pins');
+var mapFilter = document.querySelector('.map__filters-container');
+var mapFilterForm = mapFilter.querySelector('.map__filters');
+var adForm = document.querySelector('.ad-form');
+
+// Переменные с template
+
 var pinTemplate = document.querySelector('#pin').content;
 var cardTemplate = document.querySelector('#card').content;
 
@@ -193,9 +198,41 @@ var renderCardItem = function (offerItem) {
   return cardItem;
 };
 
+// Функция добавления атрибута disabled элементам на странице
+
+var setDisabled = function (element) {
+  element.disabled = true;
+  element.style = 'pointer-events: none';
+
+  return element;
+};
+
+// Функция, которая задает неактивное состояние страницы
+
+var setInactiveState = function () {
+
+  if (!map.classList.contains('map--faded')) {
+    map.classList.add('map--faded');
+  }
+
+  for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
+    setDisabled(mapFilterForm.childNodes[i]);
+  }
+
+  if (!adForm.classList.contains('ad-form--disabled')) {
+    adForm.classList.add('ad-form--disabled');
+  }
+
+  for (var j = 0; j < adForm.childNodes.length; j++) {
+    setDisabled(adForm.childNodes[j]);
+  }
+};
+
 // Основная часть
 
-map.classList.remove('map--faded');
-var offers = getOffersData(OFFER_AMOUNT);
-renderPinList(offers);
-mapFilters.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
+// map.classList.remove('map--faded');
+// var offers = getOffersData(OFFER_AMOUNT);
+// renderPinList(offers);
+// mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
+
+setInactiveState();
