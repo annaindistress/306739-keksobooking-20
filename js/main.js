@@ -20,6 +20,7 @@ var IMAGE_HEIGHT = 40;
 // Переменные
 
 var map = document.querySelector('.map');
+var pinMain = map.querySelector('.map__pin--main');
 var pinList = document.querySelector('.map__pins');
 var mapFilter = document.querySelector('.map__filters-container');
 var mapFilterForm = mapFilter.querySelector('.map__filters');
@@ -207,6 +208,13 @@ var setDisabled = function (element) {
   return element;
 };
 
+// Функция удаления атрибута disabled элементам на странице
+
+var unsetDisabled = function (element) {
+  element.disabled = false;
+  element.style = '';
+};
+
 // Функция, которая задает неактивное состояние страницы
 
 var setInactiveState = function () {
@@ -227,6 +235,36 @@ var setInactiveState = function () {
     setDisabled(adForm.childNodes[j]);
   }
 };
+
+// Функция, которая задает активное состояние страницы
+
+var setActiveState = function () {
+  map.classList.remove('map--faded');
+
+  for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
+    unsetDisabled(mapFilterForm.childNodes[i]);
+  }
+
+  adForm.classList.remove('ad-form--disabled');
+
+  for (var j = 0; j < adForm.childNodes.length; j++) {
+    unsetDisabled(adForm.childNodes[j]);
+  }
+};
+
+// Запуск
+
+pinMain.addEventListener('mousedown', function (evt) {
+  if (evt.button === 0) {
+    setActiveState();
+  }
+});
+
+pinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    setActiveState();
+  }
+});
 
 // Основная часть
 
