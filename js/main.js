@@ -27,7 +27,9 @@ var pinList = document.querySelector('.map__pins');
 var mapFilter = document.querySelector('.map__filters-container');
 var mapFilterForm = mapFilter.querySelector('.map__filters');
 var adForm = document.querySelector('.ad-form');
-var adFormAddressInput = adForm.querySelector('input[name="address"]');
+var adFormAddress = adForm.querySelector('#address');
+var adFormRoomNumber = adForm.querySelector('#room_number');
+var adFormCapacity = adForm.querySelector('#capacity');
 
 // Переменные с template
 
@@ -250,7 +252,7 @@ var setInactiveState = function () {
     toggleDisabled(adForm.childNodes[j]);
   }
 
-  adFormAddressInput.value = getCoordinates();
+  adFormAddress.value = getCoordinates();
 };
 
 // Функция, которая задает активное состояние страницы
@@ -268,10 +270,59 @@ var setActiveState = function () {
     toggleDisabled(adForm.childNodes[j], true);
   }
 
-  adFormAddressInput.value = getCoordinates(true);
+  adFormAddress.value = getCoordinates(true);
+
+  adFormRoomNumber.addEventListener('change', checkRoomCapacity);
+  adFormCapacity.addEventListener('change', checkRoomCapacity);
 };
 
-// Запуск
+// Функция проверки вместимости комнат
+
+var checkRoomCapacity = function () {
+  var rooms = adFormRoomNumber.value;
+  var guests = adFormCapacity.value;
+  var errorMessage = '';
+
+  switch (rooms) {
+    case '100':
+      if (guests > '0') {
+        errorMessage = 'Такие места не подходят для размещения гостей';
+      }
+      break;
+    case '3':
+      if (guests < '1') {
+        errorMessage = 'Количество гостей не может быть меньше 1';
+      }
+      break;
+    case '2':
+      if (guests < '1') {
+        errorMessage = 'Количество гостей не может быть меньше 1';
+      } else if (guests > '2') {
+        errorMessage = 'Количество гостей не может быть больше 2';
+      }
+      break;
+    case '1':
+      if (guests < '1') {
+        errorMessage = 'Количество гостей не может быть меньше 1';
+      } else if (guests > '1') {
+        errorMessage = 'Количество гостей не может быть больше 1';
+      }
+      break;
+  }
+
+  adFormCapacity.setCustomValidity(errorMessage);
+};
+
+// Основная часть
+
+// map.classList.remove('map--faded');
+// var offers = getOffersData(OFFER_AMOUNT);
+// renderPinList(offers);
+// mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
+
+setInactiveState();
+
+// Запуск страницы при взаимодействии с pinMain
 
 pinMain.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
@@ -285,11 +336,12 @@ pinMain.addEventListener('keydown', function (evt) {
   }
 });
 
-// Основная часть
 
-// map.classList.remove('map--faded');
-// var offers = getOffersData(OFFER_AMOUNT);
-// renderPinList(offers);
-// mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
+// Валидация формы
+/*
+// Валидация формы: количество гостей/комнат
 
-setInactiveState();
+adFormRoomNumber.addEventListener('change', checkRoomCapacity);
+
+adFormCapacity.addEventListener('change', checkRoomCapacity);
+ */
