@@ -16,6 +16,8 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var IMAGE_WIDTH = 45;
 var IMAGE_HEIGHT = 40;
+var MAIN_PIN_WIDTH = 65;
+var MAIN_PIN_HEIGHT = 85;
 
 // Переменные
 
@@ -25,6 +27,7 @@ var pinList = document.querySelector('.map__pins');
 var mapFilter = document.querySelector('.map__filters-container');
 var mapFilterForm = mapFilter.querySelector('.map__filters');
 var adForm = document.querySelector('.ad-form');
+var adFormAddressInput = adForm.querySelector('input[name="address"]');
 
 // Переменные с template
 
@@ -199,20 +202,32 @@ var renderCardItem = function (offerItem) {
   return cardItem;
 };
 
-// Функция добавления атрибута disabled элементам на странице
+// Функция удаления/добавления атрибута disabled для элемента
 
-var setDisabled = function (element) {
+var toggleDisabled = function (element, isDisabled) {
+  if (isDisabled) {
+    element.disabled = false;
+    return element;
+  }
+
   element.disabled = true;
-  element.style = 'pointer-events: none';
-
   return element;
 };
 
-// Функция удаления атрибута disabled элементам на странице
+// Функция для получения координат метки
 
-var unsetDisabled = function (element) {
-  element.disabled = false;
-  element.style = '';
+var getCoordinates = function (isActive) {
+  var left = pinMain.style.left;
+  var x = parseInt(left, 10);
+
+  var top = pinMain.style.top;
+  var y = parseInt(top, 10);
+
+  if (isActive) {
+    return (x + MAIN_PIN_WIDTH / 2) + ', ' + (y + MAIN_PIN_HEIGHT);
+  }
+
+  return (x + MAIN_PIN_WIDTH / 2) + ', ' + (y + MAIN_PIN_HEIGHT / 2);
 };
 
 // Функция, которая задает неактивное состояние страницы
@@ -224,7 +239,7 @@ var setInactiveState = function () {
   }
 
   for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
-    setDisabled(mapFilterForm.childNodes[i]);
+    toggleDisabled(mapFilterForm.childNodes[i]);
   }
 
   if (!adForm.classList.contains('ad-form--disabled')) {
@@ -232,8 +247,10 @@ var setInactiveState = function () {
   }
 
   for (var j = 0; j < adForm.childNodes.length; j++) {
-    setDisabled(adForm.childNodes[j]);
+    toggleDisabled(adForm.childNodes[j]);
   }
+
+  adFormAddressInput.value = getCoordinates();
 };
 
 // Функция, которая задает активное состояние страницы
@@ -242,14 +259,16 @@ var setActiveState = function () {
   map.classList.remove('map--faded');
 
   for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
-    unsetDisabled(mapFilterForm.childNodes[i]);
+    toggleDisabled(mapFilterForm.childNodes[i], true);
   }
 
   adForm.classList.remove('ad-form--disabled');
 
   for (var j = 0; j < adForm.childNodes.length; j++) {
-    unsetDisabled(adForm.childNodes[j]);
+    toggleDisabled(adForm.childNodes[j], true);
   }
+
+  adFormAddressInput.value = getCoordinates(true);
 };
 
 // Запуск
