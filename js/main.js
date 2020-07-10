@@ -315,11 +315,6 @@ var checkRoomCapacity = function () {
 
 // Основная часть
 
-// map.classList.remove('map--faded');
-// var offers = getOffersData(OFFER_AMOUNT);
-// renderPinList(offers);
-// mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
-
 setInactiveState();
 
 // Запуск страницы при взаимодействии с pinMain
@@ -327,21 +322,19 @@ setInactiveState();
 pinMain.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
     setActiveState();
+
+    var offers = getOffersData(OFFER_AMOUNT);
+    renderPinList(offers);
+    mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
   }
 });
 
 pinMain.addEventListener('keydown', function (evt) {
   if (evt.key === 'Enter') {
     setActiveState();
+
+    var offers = getOffersData(OFFER_AMOUNT);
+    renderPinList(offers);
+    mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
   }
 });
-
-
-// Валидация формы
-/*
-// Валидация формы: количество гостей/комнат
-
-adFormRoomNumber.addEventListener('change', checkRoomCapacity);
-
-adFormCapacity.addEventListener('change', checkRoomCapacity);
- */
