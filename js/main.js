@@ -16,12 +16,23 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var IMAGE_WIDTH = 45;
 var IMAGE_HEIGHT = 40;
+var MAIN_PIN_WIDTH = 65;
+var MAIN_PIN_HEIGHT = 85;
 
 // Переменные
 
 var map = document.querySelector('.map');
-var mapFilters = document.querySelector('.map__filters-container');
+var pinMain = map.querySelector('.map__pin--main');
 var pinList = document.querySelector('.map__pins');
+var mapFilter = document.querySelector('.map__filters-container');
+var mapFilterForm = mapFilter.querySelector('.map__filters');
+var adForm = document.querySelector('.ad-form');
+var adFormAddress = adForm.querySelector('#address');
+var adFormRoomNumber = adForm.querySelector('#room_number');
+var adFormCapacity = adForm.querySelector('#capacity');
+
+// Переменные с template
+
 var pinTemplate = document.querySelector('#pin').content;
 var cardTemplate = document.querySelector('#card').content;
 
@@ -193,9 +204,137 @@ var renderCardItem = function (offerItem) {
   return cardItem;
 };
 
+// Функция удаления/добавления атрибута disabled для элемента
+
+var toggleDisabled = function (element, isDisabled) {
+  if (isDisabled) {
+    element.disabled = false;
+    return element;
+  }
+
+  element.disabled = true;
+  return element;
+};
+
+// Функция для получения координат метки
+
+var getCoordinates = function (isActive) {
+  var left = pinMain.style.left;
+  var x = parseInt(left, 10);
+
+  var top = pinMain.style.top;
+  var y = parseInt(top, 10);
+
+  if (isActive) {
+    return (x + MAIN_PIN_WIDTH / 2) + ', ' + (y + MAIN_PIN_HEIGHT);
+  }
+
+  return (x + MAIN_PIN_WIDTH / 2) + ', ' + (y + MAIN_PIN_HEIGHT / 2);
+};
+
+// Функция, которая задает неактивное состояние страницы
+
+var setInactiveState = function () {
+
+  if (!map.classList.contains('map--faded')) {
+    map.classList.add('map--faded');
+  }
+
+  for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
+    toggleDisabled(mapFilterForm.childNodes[i]);
+  }
+
+  if (!adForm.classList.contains('ad-form--disabled')) {
+    adForm.classList.add('ad-form--disabled');
+  }
+
+  for (var j = 0; j < adForm.childNodes.length; j++) {
+    toggleDisabled(adForm.childNodes[j]);
+  }
+
+  adFormAddress.value = getCoordinates();
+};
+
+// Функция, которая задает активное состояние страницы
+
+var setActiveState = function () {
+  map.classList.remove('map--faded');
+
+  for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
+    toggleDisabled(mapFilterForm.childNodes[i], true);
+  }
+
+  adForm.classList.remove('ad-form--disabled');
+
+  for (var j = 0; j < adForm.childNodes.length; j++) {
+    toggleDisabled(adForm.childNodes[j], true);
+  }
+
+  adFormAddress.value = getCoordinates(true);
+
+  adFormRoomNumber.addEventListener('change', checkRoomCapacity);
+  adFormCapacity.addEventListener('change', checkRoomCapacity);
+};
+
+// Функция проверки вместимости комнат
+
+var checkRoomCapacity = function () {
+  var rooms = adFormRoomNumber.value;
+  var guests = adFormCapacity.value;
+  var errorMessage = '';
+
+  switch (rooms) {
+    case '100':
+      if (guests > '0') {
+        errorMessage = 'Такие места не подходят для размещения гостей';
+      }
+      break;
+    case '3':
+      if (guests < '1') {
+        errorMessage = 'Количество гостей не может быть меньше 1';
+      }
+      break;
+    case '2':
+      if (guests < '1') {
+        errorMessage = 'Количество гостей не может быть меньше 1';
+      } else if (guests > '2') {
+        errorMessage = 'Количество гостей не может быть больше 2';
+      }
+      break;
+    case '1':
+      if (guests < '1') {
+        errorMessage = 'Количество гостей не может быть меньше 1';
+      } else if (guests > '1') {
+        errorMessage = 'Количество гостей не может быть больше 1';
+      }
+      break;
+  }
+
+  adFormCapacity.setCustomValidity(errorMessage);
+};
+
 // Основная часть
 
-map.classList.remove('map--faded');
-var offers = getOffersData(OFFER_AMOUNT);
-renderPinList(offers);
-mapFilters.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
+setInactiveState();
+
+// Запуск страницы при взаимодействии с pinMain
+
+pinMain.addEventListener('mousedown', function (evt) {
+  if (evt.button === 0) {
+    setActiveState();
+
+    var offers = getOffersData(OFFER_AMOUNT);
+    renderPinList(offers);
+    mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
+  }
+});
+
+pinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    setActiveState();
+
+    var offers = getOffersData(OFFER_AMOUNT);
+    renderPinList(offers);
+    mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
+  }
+});
