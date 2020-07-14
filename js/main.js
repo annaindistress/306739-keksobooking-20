@@ -28,6 +28,8 @@ var mapFilter = document.querySelector('.map__filters-container');
 var mapFilterForm = mapFilter.querySelector('.map__filters');
 var adForm = document.querySelector('.ad-form');
 var adFormAddress = adForm.querySelector('#address');
+var adFormTimeIn = adForm.querySelector('#timein');
+var adFormTimeOut = adForm.querySelector('#timeout');
 var adFormRoomNumber = adForm.querySelector('#room_number');
 var adFormCapacity = adForm.querySelector('#capacity');
 
@@ -272,15 +274,21 @@ var setActiveState = function () {
 
   adFormAddress.value = getCoordinates(true);
 
-  adFormRoomNumber.addEventListener('change', checkRoomCapacity);
-  adFormCapacity.addEventListener('change', checkRoomCapacity);
+  adFormRoomNumber.addEventListener('change', onChangeRoomCapacity);
+  adFormCapacity.addEventListener('change', onChangeRoomCapacity);
+  adFormTimeIn.addEventListener('change', function (evt) {
+    onChangeTime(evt.target);
+  });
+  adFormTimeOut.addEventListener('change', function (evt) {
+    onChangeTime(evt.target);
+  });
 
   renderPinList(offers);
 };
 
 // Функция проверки вместимости комнат
 
-var checkRoomCapacity = function () {
+var onChangeRoomCapacity = function () {
   var rooms = adFormRoomNumber.value;
   var guests = adFormCapacity.value;
   var errorMessage = '';
@@ -313,6 +321,19 @@ var checkRoomCapacity = function () {
   }
 
   adFormCapacity.setCustomValidity(errorMessage);
+};
+
+// Функция проверки времени выезда/заезда
+
+var onChangeTime = function (element) {
+  var firstTime = element;
+  var secondTime = adFormTimeOut;
+
+  if (firstTime.id === 'timeout') {
+    secondTime = adFormTimeIn;
+  }
+
+  secondTime.options.selectedIndex = firstTime.options.selectedIndex;
 };
 
 // Функция, открывающая карточку
