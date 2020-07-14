@@ -26,14 +26,6 @@ var pinMain = map.querySelector('.map__pin--main');
 var pinList = document.querySelector('.map__pins');
 var mapFilter = document.querySelector('.map__filters-container');
 var mapFilterForm = mapFilter.querySelector('.map__filters');
-var adForm = document.querySelector('.ad-form');
-var adFormAddress = adForm.querySelector('#address');
-var adFormType = adForm.querySelector('#type');
-var adFormPrice = adForm.querySelector('#price');
-var adFormTimeIn = adForm.querySelector('#timein');
-var adFormTimeOut = adForm.querySelector('#timeout');
-var adFormRoomNumber = adForm.querySelector('#room_number');
-var adFormCapacity = adForm.querySelector('#capacity');
 
 // Переменные с template
 
@@ -248,15 +240,21 @@ var setInactiveState = function () {
     toggleDisabled(mapFilterForm.childNodes[i]);
   }
 
-  if (!adForm.classList.contains('ad-form--disabled')) {
-    adForm.classList.add('ad-form--disabled');
+  if (!window.form.mainForm.classList.contains('ad-form--disabled')) {
+    window.form.mainForm.classList.add('ad-form--disabled');
   }
 
-  for (var j = 0; j < adForm.childNodes.length; j++) {
-    toggleDisabled(adForm.childNodes[j]);
+  for (var j = 0; j < window.form.mainForm.childNodes.length; j++) {
+    toggleDisabled(window.form.mainForm.childNodes[j]);
   }
 
-  adFormAddress.value = getCoordinates();
+  window.form.address.value = getCoordinates();
+
+  window.form.roomNumber.removeEventListener('change', window.form.onChangeRoomCapacity);
+  window.form.capacity.removeEventListener('change', window.form.onChangeRoomCapacity);
+  window.form.timeIn.removeEventListener('change', window.form.onChangeTime);
+  window.form.timeOut.removeEventListener('change', window.form.onChangeTime);
+  window.form.type.removeEventListener('change', window.form.onChangeType);
 };
 
 // Функция, которая задает активное состояние страницы
@@ -268,100 +266,21 @@ var setActiveState = function () {
     toggleDisabled(mapFilterForm.childNodes[i], true);
   }
 
-  adForm.classList.remove('ad-form--disabled');
+  window.form.mainForm.classList.remove('ad-form--disabled');
 
-  for (var j = 0; j < adForm.childNodes.length; j++) {
-    toggleDisabled(adForm.childNodes[j], true);
+  for (var j = 0; j < window.form.mainForm.childNodes.length; j++) {
+    toggleDisabled(window.form.mainForm.childNodes[j], true);
   }
 
-  adFormAddress.value = getCoordinates(true);
+  window.form.address.value = getCoordinates(true);
 
-  adFormRoomNumber.addEventListener('change', onChangeRoomCapacity);
-  adFormCapacity.addEventListener('change', onChangeRoomCapacity);
-  adFormTimeIn.addEventListener('change', function (evt) {
-    onChangeTime(evt.target);
-  });
-  adFormTimeOut.addEventListener('change', function (evt) {
-    onChangeTime(evt.target);
-  });
-  adFormType.addEventListener('change', onChangeType);
+  window.form.roomNumber.addEventListener('change', window.form.onChangeRoomCapacity);
+  window.form.capacity.addEventListener('change', window.form.onChangeRoomCapacity);
+  window.form.timeIn.addEventListener('change', window.form.onChangeTime);
+  window.form.timeOut.addEventListener('change', window.form.onChangeTime);
+  window.form.type.addEventListener('change', window.form.onChangeType);
 
   renderPinList(offers);
-};
-
-// Функция проверки вместимости комнат
-
-var onChangeRoomCapacity = function () {
-  var rooms = adFormRoomNumber.value;
-  var guests = adFormCapacity.value;
-  var errorMessage = '';
-
-  switch (rooms) {
-    case '100':
-      if (guests > '0') {
-        errorMessage = 'Такие места не подходят для размещения гостей';
-      }
-      break;
-    case '3':
-      if (guests < '1') {
-        errorMessage = 'Количество гостей не может быть меньше 1';
-      }
-      break;
-    case '2':
-      if (guests < '1') {
-        errorMessage = 'Количество гостей не может быть меньше 1';
-      } else if (guests > '2') {
-        errorMessage = 'Количество гостей не может быть больше 2';
-      }
-      break;
-    case '1':
-      if (guests < '1') {
-        errorMessage = 'Количество гостей не может быть меньше 1';
-      } else if (guests > '1') {
-        errorMessage = 'Количество гостей не может быть больше 1';
-      }
-      break;
-  }
-
-  adFormCapacity.setCustomValidity(errorMessage);
-};
-
-// Функция проверки времени выезда/заезда
-
-var onChangeTime = function (element) {
-  var firstTime = element;
-  var secondTime = adFormTimeOut;
-
-  if (firstTime.id === 'timeout') {
-    secondTime = adFormTimeIn;
-  }
-
-  secondTime.options.selectedIndex = firstTime.options.selectedIndex;
-};
-
-// Функция проверки соответствия типа жилья и цены за ночь
-
-var onChangeType = function () {
-  var type = adFormType.value;
-
-  switch (type) {
-    case 'bungalo':
-      adFormPrice.min = 0;
-      adFormPrice.placeholder = '0';
-      break;
-    case 'flat':
-      adFormPrice.min = 1000;
-      adFormPrice.placeholder = '1000';
-      break;
-    case 'house':
-      adFormPrice.min = 5000;
-      adFormPrice.placeholder = '5000';
-      break;
-    case 'palace':
-      adFormPrice.min = 10000;
-      adFormPrice.placeholder = '10000';
-      break;
-  }
 };
 
 // Функция, открывающая карточку
@@ -423,6 +342,8 @@ pinMain.addEventListener('keydown', function (evt) {
     setActiveState();
   }
 });
+
+// Открытие доступного предложения
 
 map.addEventListener('click', function (evt) {
   var element = evt.target;
