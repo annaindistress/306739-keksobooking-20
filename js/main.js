@@ -315,25 +315,6 @@ var checkRoomCapacity = function () {
   adFormCapacity.setCustomValidity(errorMessage);
 };
 
-// Основная часть
-
-setInactiveState();
-var offers = getOffersData(OFFER_AMOUNT);
-
-// Запуск страницы при взаимодействии с pinMain
-
-pinMain.addEventListener('mousedown', function (evt) {
-  if (evt.button === 0) {
-    setActiveState();
-  }
-});
-
-pinMain.addEventListener('keydown', function (evt) {
-  if (evt.key === 'Enter') {
-    setActiveState();
-  }
-});
-
 // Функция, открывающая карточку
 
 var openCard = function (element) {
@@ -374,6 +355,25 @@ var onCardEscPress = function (evt) {
     closeCard();
   }
 };
+
+// Основная часть
+
+setInactiveState();
+var offers = getOffersData(OFFER_AMOUNT);
+
+// Запуск страницы при взаимодействии с pinMain
+
+pinMain.addEventListener('mousedown', function (evt) {
+  if (evt.button === 0) {
+    setActiveState();
+  }
+});
+
+pinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    setActiveState();
+  }
+});
 
 map.addEventListener('click', function (evt) {
   var element = evt.target;
