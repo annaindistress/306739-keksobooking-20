@@ -1,114 +1,101 @@
 'use strict';
 
-// Константы
-var MAIN_PIN_WIDTH = 65;
-var MAIN_PIN_HEIGHT = 85;
+(function () {
+  var MAIN_PIN_WIDTH = 65;
+  var MAIN_PIN_HEIGHT = 85;
 
-// Переменные
+  var pinMain = window.map.item.querySelector('.map__pin--main');
+  var mapFilterForm = window.map.filter.querySelector('.map__filters');
 
-var pinMain = window.map.item.querySelector('.map__pin--main');
-var mapFilterForm = window.map.filter.querySelector('.map__filters');
+  var toggleDisabled = function (element, isDisabled) {
+    if (isDisabled) {
+      element.disabled = false;
+      return element;
+    }
 
-// Функция удаления/добавления атрибута disabled для элемента
-
-var toggleDisabled = function (element, isDisabled) {
-  if (isDisabled) {
-    element.disabled = false;
+    element.disabled = true;
     return element;
-  }
+  };
 
-  element.disabled = true;
-  return element;
-};
+  var getCoordinates = function (isActive) {
+    var left = pinMain.style.left;
+    var x = parseInt(left, 10);
 
-// Функция для получения координат метки
+    var top = pinMain.style.top;
+    var y = parseInt(top, 10);
 
-var getCoordinates = function (isActive) {
-  var left = pinMain.style.left;
-  var x = parseInt(left, 10);
+    if (isActive) {
+      return (x + MAIN_PIN_WIDTH / 2) + ', ' + (y + MAIN_PIN_HEIGHT);
+    }
 
-  var top = pinMain.style.top;
-  var y = parseInt(top, 10);
+    return (x + MAIN_PIN_WIDTH / 2) + ', ' + (y + MAIN_PIN_HEIGHT / 2);
+  };
 
-  if (isActive) {
-    return (x + MAIN_PIN_WIDTH / 2) + ', ' + (y + MAIN_PIN_HEIGHT);
-  }
+  var setInactiveState = function () {
 
-  return (x + MAIN_PIN_WIDTH / 2) + ', ' + (y + MAIN_PIN_HEIGHT / 2);
-};
+    if (!window.map.item.classList.contains('map--faded')) {
+      window.map.item.classList.add('map--faded');
+    }
 
-// Функция, которая задает неактивное состояние страницы
+    for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
+      toggleDisabled(mapFilterForm.childNodes[i]);
+    }
 
-var setInactiveState = function () {
+    if (!window.form.mainForm.classList.contains('ad-form--disabled')) {
+      window.form.mainForm.classList.add('ad-form--disabled');
+    }
 
-  if (!window.map.item.classList.contains('map--faded')) {
-    window.map.item.classList.add('map--faded');
-  }
+    for (var j = 0; j < window.form.mainForm.childNodes.length; j++) {
+      toggleDisabled(window.form.mainForm.childNodes[j]);
+    }
 
-  for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
-    toggleDisabled(mapFilterForm.childNodes[i]);
-  }
+    window.form.address.value = getCoordinates();
 
-  if (!window.form.mainForm.classList.contains('ad-form--disabled')) {
-    window.form.mainForm.classList.add('ad-form--disabled');
-  }
+    window.form.roomNumber.removeEventListener('change', window.form.onChangeRoomCapacity);
+    window.form.capacity.removeEventListener('change', window.form.onChangeRoomCapacity);
+    window.form.timeIn.removeEventListener('change', window.form.onChangeTime);
+    window.form.timeOut.removeEventListener('change', window.form.onChangeTime);
+    window.form.type.removeEventListener('change', window.form.onChangeType);
 
-  for (var j = 0; j < window.form.mainForm.childNodes.length; j++) {
-    toggleDisabled(window.form.mainForm.childNodes[j]);
-  }
+    window.map.item.removeEventListener('click', window.map.onMapClick);
+  };
 
-  window.form.address.value = getCoordinates();
+  var setActiveState = function () {
+    window.map.item.classList.remove('map--faded');
 
-  window.form.roomNumber.removeEventListener('change', window.form.onChangeRoomCapacity);
-  window.form.capacity.removeEventListener('change', window.form.onChangeRoomCapacity);
-  window.form.timeIn.removeEventListener('change', window.form.onChangeTime);
-  window.form.timeOut.removeEventListener('change', window.form.onChangeTime);
-  window.form.type.removeEventListener('change', window.form.onChangeType);
+    for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
+      toggleDisabled(mapFilterForm.childNodes[i], true);
+    }
 
-  window.map.item.removeEventListener('click', window.map.onMapClick);
-};
+    window.form.mainForm.classList.remove('ad-form--disabled');
 
-// Функция, которая задает активное состояние страницы
+    for (var j = 0; j < window.form.mainForm.childNodes.length; j++) {
+      toggleDisabled(window.form.mainForm.childNodes[j], true);
+    }
 
-var setActiveState = function () {
-  window.map.item.classList.remove('map--faded');
+    window.form.address.value = getCoordinates(true);
 
-  for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
-    toggleDisabled(mapFilterForm.childNodes[i], true);
-  }
+    window.form.roomNumber.addEventListener('change', window.form.onChangeRoomCapacity);
+    window.form.capacity.addEventListener('change', window.form.onChangeRoomCapacity);
+    window.form.timeIn.addEventListener('change', window.form.onChangeTime);
+    window.form.timeOut.addEventListener('change', window.form.onChangeTime);
+    window.form.type.addEventListener('change', window.form.onChangeType);
 
-  window.form.mainForm.classList.remove('ad-form--disabled');
+    window.map.renderPinList(window.data.offers);
+    window.map.item.addEventListener('click', window.map.onMapClick);
+  };
 
-  for (var j = 0; j < window.form.mainForm.childNodes.length; j++) {
-    toggleDisabled(window.form.mainForm.childNodes[j], true);
-  }
+  setInactiveState();
 
-  window.form.address.value = getCoordinates(true);
+  pinMain.addEventListener('mousedown', function (evt) {
+    if (evt.button === 0) {
+      setActiveState();
+    }
+  });
 
-  window.form.roomNumber.addEventListener('change', window.form.onChangeRoomCapacity);
-  window.form.capacity.addEventListener('change', window.form.onChangeRoomCapacity);
-  window.form.timeIn.addEventListener('change', window.form.onChangeTime);
-  window.form.timeOut.addEventListener('change', window.form.onChangeTime);
-  window.form.type.addEventListener('change', window.form.onChangeType);
-
-  window.map.renderPinList(window.data.offers);
-  window.map.item.addEventListener('click', window.map.onMapClick);
-};
-
-// Основная часть
-
-setInactiveState();
-
-// Запуск страницы при взаимодействии с pinMain
-
-pinMain.addEventListener('mousedown', function (evt) {
-  if (evt.button === 0) {
-    setActiveState();
-  }
-});
-
-pinMain.addEventListener('keydown', function (evt) {
-  if (evt.key === 'Enter') {
-    setActiveState();
-  }
-});
+  pinMain.addEventListener('keydown', function (evt) {
+    if (evt.key === 'Enter') {
+      setActiveState();
+    }
+  });
+})();
