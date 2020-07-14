@@ -32,46 +32,14 @@ var mapFilterForm = mapFilter.querySelector('.map__filters');
 var pinTemplate = document.querySelector('#pin').content;
 var cardTemplate = document.querySelector('#card').content;
 
-// Функция генерации случайного числа от min до max
-
-var getRandomInt = function (min, max) {
-  if (max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
-  return Math.floor(Math.random() * (min + 1));
-};
-
-// Функция получения случайного значения из массива
-
-var getRandomArrayElement = function (array) {
-  var index = getRandomInt(array.length - 1);
-  return array[index];
-};
-
-// Функция создания нового массива случайной длины из существующего
-
-var getRandomArray = function (array) {
-  var newArray = array;
-
-  for (var i = newArray.length - 1; i > 0; i--) {
-    var j = getRandomInt(i);
-    var temp = newArray[i];
-    newArray[i] = newArray[j];
-    newArray[j] = temp;
-  }
-
-  return newArray.slice(0, getRandomInt(1, newArray.length));
-};
-
 // Функция создания массива из сгенерированных JS-объектов
 
 var getOffersData = function (amount) {
   var offers = [];
 
   for (var i = 0; i < amount; i++) {
-    var offerLocationX = getRandomInt(PIN_X_MAX);
-    var offerLocationY = getRandomInt(PIN_Y_MIN, PIN_Y_MAX);
+    var offerLocationX = window.util.getRandomInt(PIN_X_MAX);
+    var offerLocationY = window.Uint8ClampedArray.util.getRandomInt(PIN_Y_MIN, PIN_Y_MAX);
 
     offers[i] = {
       author: {
@@ -85,14 +53,14 @@ var getOffersData = function (amount) {
         title: 'Заголовок предложения',
         address: offerLocationX + ', ' + offerLocationY,
         price: 0,
-        type: getRandomArrayElement(OFFER_TYPES),
+        type: window.util.getRandomArrayElement(OFFER_TYPES),
         rooms: 0,
         guests: 0,
-        checkin: getRandomArrayElement(OFFER_TIMES),
-        checkout: getRandomArrayElement(OFFER_TIMES),
-        features: getRandomArray(OFFER_FEATURES),
+        checkin: window.util.getRandomArrayElement(OFFER_TIMES),
+        checkout: window.util.getRandomArrayElement(OFFER_TIMES),
+        features: window.util.getRandomArray(OFFER_FEATURES),
         description: 'Строка с описанием',
-        photos: getRandomArray(OFFER_PHOTOS)
+        photos: window.util.getRandomArray(OFFER_PHOTOS)
       }
     };
   }
