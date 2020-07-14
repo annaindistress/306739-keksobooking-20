@@ -28,6 +28,10 @@ var mapFilter = document.querySelector('.map__filters-container');
 var mapFilterForm = mapFilter.querySelector('.map__filters');
 var adForm = document.querySelector('.ad-form');
 var adFormAddress = adForm.querySelector('#address');
+var adFormType = adForm.querySelector('#type');
+var adFormPrice = adForm.querySelector('#price');
+var adFormTimeIn = adForm.querySelector('#timein');
+var adFormTimeOut = adForm.querySelector('#timeout');
 var adFormRoomNumber = adForm.querySelector('#room_number');
 var adFormCapacity = adForm.querySelector('#capacity');
 
@@ -272,13 +276,22 @@ var setActiveState = function () {
 
   adFormAddress.value = getCoordinates(true);
 
-  adFormRoomNumber.addEventListener('change', checkRoomCapacity);
-  adFormCapacity.addEventListener('change', checkRoomCapacity);
+  adFormRoomNumber.addEventListener('change', onChangeRoomCapacity);
+  adFormCapacity.addEventListener('change', onChangeRoomCapacity);
+  adFormTimeIn.addEventListener('change', function (evt) {
+    onChangeTime(evt.target);
+  });
+  adFormTimeOut.addEventListener('change', function (evt) {
+    onChangeTime(evt.target);
+  });
+  adFormType.addEventListener('change', onChangeType);
+
+  renderPinList(offers);
 };
 
 // Функция проверки вместимости комнат
 
-var checkRoomCapacity = function () {
+var onChangeRoomCapacity = function () {
   var rooms = adFormRoomNumber.value;
   var guests = adFormCapacity.value;
   var errorMessage = '';
@@ -313,28 +326,111 @@ var checkRoomCapacity = function () {
   adFormCapacity.setCustomValidity(errorMessage);
 };
 
+// Функция проверки времени выезда/заезда
+
+var onChangeTime = function (element) {
+  var firstTime = element;
+  var secondTime = adFormTimeOut;
+
+  if (firstTime.id === 'timeout') {
+    secondTime = adFormTimeIn;
+  }
+
+  secondTime.options.selectedIndex = firstTime.options.selectedIndex;
+};
+
+// Функция проверки соответствия типа жилья и цены за ночь
+
+var onChangeType = function () {
+  var type = adFormType.value;
+
+  switch (type) {
+    case 'bungalo':
+      adFormPrice.min = 0;
+      adFormPrice.placeholder = '0';
+      break;
+    case 'flat':
+      adFormPrice.min = 1000;
+      adFormPrice.placeholder = '1000';
+      break;
+    case 'house':
+      adFormPrice.min = 5000;
+      adFormPrice.placeholder = '5000';
+      break;
+    case 'palace':
+      adFormPrice.min = 10000;
+      adFormPrice.placeholder = '10000';
+      break;
+  }
+};
+
+// Функция, открывающая карточку
+
+var openCard = function (element) {
+  var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 0);
+  var index = pinButtons.indexOf(element);
+
+  if (index === 0) {
+    return;
+  }
+
+  if (document.querySelector('.map__card')) {
+    closeCard();
+  }
+
+  mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[index - 1]));
+
+  document.addEventListener('keydown', onCardEscPress);
+
+  var cardCloseButton = document.querySelector('.popup__close');
+  cardCloseButton.addEventListener('click', function () {
+    closeCard();
+  });
+};
+
+// Функция, закрывающая карточку
+
+var closeCard = function () {
+  var card = map.querySelector('.map__card');
+  card.remove();
+  document.removeEventListener('keydown', onCardEscPress);
+};
+
+// Функция, обрабатывающая нажатие на Esc
+
+var onCardEscPress = function (evt) {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    closeCard();
+  }
+};
+
 // Основная часть
 
 setInactiveState();
+var offers = getOffersData(OFFER_AMOUNT);
 
 // Запуск страницы при взаимодействии с pinMain
 
 pinMain.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
     setActiveState();
-
-    var offers = getOffersData(OFFER_AMOUNT);
-    renderPinList(offers);
-    mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
   }
 });
 
 pinMain.addEventListener('keydown', function (evt) {
   if (evt.key === 'Enter') {
     setActiveState();
+  }
+});
 
-    var offers = getOffersData(OFFER_AMOUNT);
-    renderPinList(offers);
-    mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
+map.addEventListener('click', function (evt) {
+  var element = evt.target;
+
+  if (element.classList.contains('map__pin')) {
+    openCard(element);
+  } else if (element.parentNode.classList.contains('map__pin')) {
+    element = element.parentNode;
+    openCard(element);
   }
 });
