@@ -274,6 +274,8 @@ var setActiveState = function () {
 
   adFormRoomNumber.addEventListener('change', checkRoomCapacity);
   adFormCapacity.addEventListener('change', checkRoomCapacity);
+
+  renderPinList(offers);
 };
 
 // Функция проверки вместимости комнат
@@ -316,25 +318,70 @@ var checkRoomCapacity = function () {
 // Основная часть
 
 setInactiveState();
+var offers = getOffersData(OFFER_AMOUNT);
 
 // Запуск страницы при взаимодействии с pinMain
 
 pinMain.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
     setActiveState();
-
-    var offers = getOffersData(OFFER_AMOUNT);
-    renderPinList(offers);
-    mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
   }
 });
 
 pinMain.addEventListener('keydown', function (evt) {
   if (evt.key === 'Enter') {
     setActiveState();
+  }
+});
 
-    var offers = getOffersData(OFFER_AMOUNT);
-    renderPinList(offers);
-    mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[0]));
+// Функция, открывающая карточку
+
+var openCard = function (element) {
+  var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 0);
+  var index = pinButtons.indexOf(element);
+
+  if (index === 0) {
+    return;
+  }
+
+  if (document.querySelector('.map__card')) {
+    closeCard();
+  }
+
+  mapFilter.insertAdjacentElement('beforeBegin', renderCardItem(offers[index - 1]));
+
+  document.addEventListener('keydown', onCardEscPress);
+
+  var cardCloseButton = document.querySelector('.popup__close');
+  cardCloseButton.addEventListener('click', function () {
+    closeCard();
+  });
+};
+
+// Функция, закрывающая карточку
+
+var closeCard = function () {
+  var card = map.querySelector('.map__card');
+  card.remove();
+  document.removeEventListener('keydown', onCardEscPress);
+};
+
+// Функция, обрабатывающая нажатие на Esc
+
+var onCardEscPress = function (evt) {
+  if (evt.key === 'Escape') {
+    evt.preventDefault();
+    closeCard();
+  }
+};
+
+map.addEventListener('click', function (evt) {
+  var element = evt.target;
+
+  if (element.classList.contains('map__pin')) {
+    openCard(element);
+  } else if (element.parentNode.classList.contains('map__pin')) {
+    element = element.parentNode;
+    openCard(element);
   }
 });
