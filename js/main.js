@@ -6,23 +6,8 @@ var MAIN_PIN_HEIGHT = 85;
 
 // Переменные
 
-var map = document.querySelector('.map');
-var pinMain = map.querySelector('.map__pin--main');
-var pinList = document.querySelector('.map__pins');
-var mapFilter = document.querySelector('.map__filters-container');
-var mapFilterForm = mapFilter.querySelector('.map__filters');
-
-// Функция заполнения карты пин-метками на основе массива JS-объектов
-
-var renderPinList = function (offerList) {
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < offerList.length; i++) {
-    fragment.appendChild(window.pin.render(offerList[i]));
-  }
-
-  pinList.appendChild(fragment);
-};
+var pinMain = window.map.item.querySelector('.map__pin--main');
+var mapFilterForm = window.map.filter.querySelector('.map__filters');
 
 // Функция удаления/добавления атрибута disabled для элемента
 
@@ -56,8 +41,8 @@ var getCoordinates = function (isActive) {
 
 var setInactiveState = function () {
 
-  if (!map.classList.contains('map--faded')) {
-    map.classList.add('map--faded');
+  if (!window.map.item.classList.contains('map--faded')) {
+    window.map.item.classList.add('map--faded');
   }
 
   for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
@@ -79,12 +64,14 @@ var setInactiveState = function () {
   window.form.timeIn.removeEventListener('change', window.form.onChangeTime);
   window.form.timeOut.removeEventListener('change', window.form.onChangeTime);
   window.form.type.removeEventListener('change', window.form.onChangeType);
+
+  window.map.item.removeEventListener('click', window.map.onMapClick);
 };
 
 // Функция, которая задает активное состояние страницы
 
 var setActiveState = function () {
-  map.classList.remove('map--faded');
+  window.map.item.classList.remove('map--faded');
 
   for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
     toggleDisabled(mapFilterForm.childNodes[i], true);
@@ -104,48 +91,8 @@ var setActiveState = function () {
   window.form.timeOut.addEventListener('change', window.form.onChangeTime);
   window.form.type.addEventListener('change', window.form.onChangeType);
 
-  renderPinList(window.data.offers);
-};
-
-// Функция, открывающая карточку
-
-var openCard = function (element) {
-  var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 0);
-  var index = pinButtons.indexOf(element);
-
-  if (index === 0) {
-    return;
-  }
-
-  if (document.querySelector('.map__card')) {
-    closeCard();
-  }
-
-  mapFilter.insertAdjacentElement('beforeBegin', window.card.render(window.data.offers[index - 1]));
-
-  document.addEventListener('keydown', onCardEscPress);
-
-  var cardCloseButton = document.querySelector('.popup__close');
-  cardCloseButton.addEventListener('click', function () {
-    closeCard();
-  });
-};
-
-// Функция, закрывающая карточку
-
-var closeCard = function () {
-  var card = map.querySelector('.map__card');
-  card.remove();
-  document.removeEventListener('keydown', onCardEscPress);
-};
-
-// Функция, обрабатывающая нажатие на Esc
-
-var onCardEscPress = function (evt) {
-  if (evt.key === 'Escape') {
-    evt.preventDefault();
-    closeCard();
-  }
+  window.map.renderPinList(window.data.offers);
+  window.map.item.addEventListener('click', window.map.onMapClick);
 };
 
 // Основная часть
@@ -163,18 +110,5 @@ pinMain.addEventListener('mousedown', function (evt) {
 pinMain.addEventListener('keydown', function (evt) {
   if (evt.key === 'Enter') {
     setActiveState();
-  }
-});
-
-// Открытие доступного предложения
-
-map.addEventListener('click', function (evt) {
-  var element = evt.target;
-
-  if (element.classList.contains('map__pin')) {
-    openCard(element);
-  } else if (element.parentNode.classList.contains('map__pin')) {
-    element = element.parentNode;
-    openCard(element);
   }
 });
