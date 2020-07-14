@@ -1,8 +1,6 @@
 'use strict';
 
 // Константы
-var PIN_WIDTH = 50;
-var PIN_HEIGHT = 70;
 var MAIN_PIN_WIDTH = 65;
 var MAIN_PIN_HEIGHT = 85;
 
@@ -14,31 +12,13 @@ var pinList = document.querySelector('.map__pins');
 var mapFilter = document.querySelector('.map__filters-container');
 var mapFilterForm = mapFilter.querySelector('.map__filters');
 
-// Переменные с template
-
-var pinTemplate = document.querySelector('#pin').content;
-
-// Функция создания пин-метки на основе JS-объекта
-
-var renderPinItem = function (offerItem) {
-  var pinItem = pinTemplate.cloneNode(true).querySelector('button');
-  var pinImg = pinItem.querySelector('img');
-
-  pinItem.style.left = offerItem.location.x - PIN_WIDTH / 2 + 'px';
-  pinItem.style.top = offerItem.location.y - PIN_HEIGHT + 'px';
-  pinImg.src = offerItem.author.avatar;
-  pinImg.alt = offerItem.offer.title;
-
-  return pinItem;
-};
-
 // Функция заполнения карты пин-метками на основе массива JS-объектов
 
 var renderPinList = function (offerList) {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < offerList.length; i++) {
-    fragment.appendChild(renderPinItem(offerList[i]));
+    fragment.appendChild(window.pin.render(offerList[i]));
   }
 
   pinList.appendChild(fragment);
