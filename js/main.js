@@ -28,6 +28,8 @@ var mapFilter = document.querySelector('.map__filters-container');
 var mapFilterForm = mapFilter.querySelector('.map__filters');
 var adForm = document.querySelector('.ad-form');
 var adFormAddress = adForm.querySelector('#address');
+var adFormType = adForm.querySelector('#type');
+var adFormPrice = adForm.querySelector('#price');
 var adFormTimeIn = adForm.querySelector('#timein');
 var adFormTimeOut = adForm.querySelector('#timeout');
 var adFormRoomNumber = adForm.querySelector('#room_number');
@@ -282,6 +284,7 @@ var setActiveState = function () {
   adFormTimeOut.addEventListener('change', function (evt) {
     onChangeTime(evt.target);
   });
+  adFormType.addEventListener('change', onChangeType);
 
   renderPinList(offers);
 };
@@ -334,6 +337,31 @@ var onChangeTime = function (element) {
   }
 
   secondTime.options.selectedIndex = firstTime.options.selectedIndex;
+};
+
+// Функция проверки соответствия типа жилья и цены за ночь
+
+var onChangeType = function () {
+  var type = adFormType.value;
+
+  switch (type) {
+    case 'bungalo':
+      adFormPrice.min = 0;
+      adFormPrice.placeholder = '0';
+      break;
+    case 'flat':
+      adFormPrice.min = 1000;
+      adFormPrice.placeholder = '1000';
+      break;
+    case 'house':
+      adFormPrice.min = 5000;
+      adFormPrice.placeholder = '5000';
+      break;
+    case 'palace':
+      adFormPrice.min = 10000;
+      adFormPrice.placeholder = '10000';
+      break;
+  }
 };
 
 // Функция, открывающая карточку
