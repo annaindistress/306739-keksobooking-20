@@ -1,10 +1,6 @@
 'use strict';
 
 (function () {
-  var MAIN_PIN_WIDTH = 65;
-  var MAIN_PIN_HEIGHT = 85;
-
-  var pinMain = window.map.item.querySelector('.map__pin--main');
   var mapFilterForm = window.map.filter.querySelector('.map__filters');
 
   var toggleDisabled = function (element, isDisabled) {
@@ -15,20 +11,6 @@
 
     element.disabled = true;
     return element;
-  };
-
-  var getCoordinates = function (isActive) {
-    var left = pinMain.style.left;
-    var x = parseInt(left, 10);
-
-    var top = pinMain.style.top;
-    var y = parseInt(top, 10);
-
-    if (isActive) {
-      return (x + MAIN_PIN_WIDTH / 2) + ', ' + (y + MAIN_PIN_HEIGHT);
-    }
-
-    return (x + MAIN_PIN_WIDTH / 2) + ', ' + (y + MAIN_PIN_HEIGHT / 2);
   };
 
   var setInactiveState = function () {
@@ -49,7 +31,7 @@
       toggleDisabled(window.form.mainForm.childNodes[j]);
     }
 
-    window.form.address.value = getCoordinates();
+    window.form.address.value = window.move.setAddress();
 
     window.form.roomNumber.removeEventListener('change', window.form.onChangeRoomCapacity);
     window.form.capacity.removeEventListener('change', window.form.onChangeRoomCapacity);
@@ -73,7 +55,7 @@
       toggleDisabled(window.form.mainForm.childNodes[j], true);
     }
 
-    window.form.address.value = getCoordinates(true);
+    window.form.address.value = window.move.setAddress(true);
 
     window.form.roomNumber.addEventListener('change', window.form.onChangeRoomCapacity);
     window.form.capacity.addEventListener('change', window.form.onChangeRoomCapacity);
@@ -87,15 +69,17 @@
 
   setInactiveState();
 
-  pinMain.addEventListener('mousedown', function (evt) {
+  window.move.pin.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
       setActiveState();
+      window.move.onMainPinPress(evt);
     }
   });
 
-  pinMain.addEventListener('keydown', function (evt) {
+  window.move.pin.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter') {
       setActiveState();
+      window.move.onMainPinPress(evt);
     }
   });
 })();
