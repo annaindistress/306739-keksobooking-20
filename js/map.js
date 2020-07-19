@@ -13,7 +13,7 @@
   };
 
   var openCard = function (element) {
-    var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 1);
+    var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 0);
     var index = pinButtons.indexOf(element);
 
     if (index === 0) {
@@ -25,7 +25,7 @@
     }
 
     window.loadOffersData(function (offers) {
-      mapFilter.insertAdjacentElement('beforeBegin', window.card.render(offers[index]));
+      mapFilter.insertAdjacentElement('beforeBegin', window.card.render(offers[index - 1]));
 
       document.addEventListener('keydown', onCardEscPress);
 
