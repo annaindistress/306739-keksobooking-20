@@ -2,6 +2,9 @@
 
 (function () {
   window.util = {
+    statusCode: {
+      OK: 200
+    },
     getRandomInt: function (min, max) {
       if (max) {
         return Math.floor(Math.random() * (max - min + 1) + min);

@@ -11,9 +11,19 @@
   var mainPinHalf = MAIN_PIN_WIDTH / 2;
   var pinMain = window.map.item.querySelector('.map__pin--main');
 
+  var mainPinStartX = getComputedStyle(pinMain).left;
+  var mainPinStartY = getComputedStyle(pinMain).top;
+
+  var setStartingAddress = function () {
+    pinMain.style.top = mainPinStartY;
+    pinMain.style.left = mainPinStartX;
+    window.form.address.value = window.move.setCurrentAddress();
+  };
+
   window.move = {
     pin: pinMain,
-    setAddress: function (isActive) {
+    setStartAddress: setStartingAddress,
+    setCurrentAddress: function (isActive) {
       var coords = {
         x: parseInt(pinMain.style.left, 10),
         y: parseInt(pinMain.style.top, 10)
@@ -62,7 +72,7 @@
           pinMain.style.left = (pinMain.offsetLeft - shift.x) + 'px';
         }
 
-        window.form.address.value = window.move.setAddress(true);
+        window.form.address.value = window.move.setCurrentAddress(true);
       };
 
       var onMouseUp = function (upEvt) {

@@ -5,8 +5,6 @@
   var mapFilter = document.querySelector('.map__filters-container');
   var pinList = document.querySelector('.map__pins');
 
-  // Функция, обрабатывающая нажатие на Esc
-
   var onCardEscPress = function (evt) {
     if (evt.key === 'Escape') {
       evt.preventDefault();
@@ -14,10 +12,8 @@
     }
   };
 
-  // Функция, открывающая карточку
-
   var openCard = function (element) {
-    var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 1);
+    var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 0);
     var index = pinButtons.indexOf(element);
 
     if (index === 0) {
@@ -29,7 +25,7 @@
     }
 
     window.loadOffersData(function (offers) {
-      mapFilter.insertAdjacentElement('beforeBegin', window.card.render(offers[index]));
+      mapFilter.insertAdjacentElement('beforeBegin', window.card.render(offers[index - 1]));
 
       document.addEventListener('keydown', onCardEscPress);
 
@@ -40,16 +36,27 @@
     });
   };
 
-  // Функция, закрывающая карточку
-
   var closeCard = function () {
     var card = map.querySelector('.map__card');
     card.remove();
     document.removeEventListener('keydown', onCardEscPress);
   };
 
+  var cleanMap = function () {
+    var pins = map.querySelectorAll('.map__pin');
+
+    for (var i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pins[i].remove();
+      }
+    }
+
+    closeCard();
+  };
+
   window.map = {
     item: map,
+    pinList: pinList,
     filter: mapFilter,
     renderPinList: function (offerList) {
       var fragment = document.createDocumentFragment();
@@ -69,6 +76,7 @@
         element = element.parentNode;
         openCard(element);
       }
-    }
+    },
+    clean: cleanMap
   };
 })();
