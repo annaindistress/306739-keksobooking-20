@@ -63,7 +63,8 @@
     window.form.timeOut.addEventListener('change', window.form.onChangeTime);
     window.form.type.addEventListener('change', window.form.onChangeType);
 
-    window.map.renderPinList(window.data.offers);
+    window.loadOffersData(window.map.renderPinList);
+
     window.map.item.addEventListener('click', window.map.onMapClick);
   };
 

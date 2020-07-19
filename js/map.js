@@ -28,13 +28,15 @@
       closeCard();
     }
 
-    mapFilter.insertAdjacentElement('beforeBegin', window.card.render(window.data.offers[index - 1]));
+    window.loadOffersData(function (offers) {
+      mapFilter.insertAdjacentElement('beforeBegin', window.card.render(offers[index - 1]));
 
-    document.addEventListener('keydown', onCardEscPress);
+      document.addEventListener('keydown', onCardEscPress);
 
-    var cardCloseButton = document.querySelector('.popup__close');
-    cardCloseButton.addEventListener('click', function () {
-      closeCard();
+      var cardCloseButton = document.querySelector('.popup__close');
+      cardCloseButton.addEventListener('click', function () {
+        closeCard();
+      });
     });
   };
 
