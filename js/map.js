@@ -43,6 +43,7 @@
   };
 
   var cleanMap = function () {
+    closeCard();
     var pins = map.querySelectorAll('.map__pin');
 
     for (var i = 0; i < pins.length; i++) {
