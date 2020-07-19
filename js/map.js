@@ -17,7 +17,7 @@
   // Функция, открывающая карточку
 
   var openCard = function (element) {
-    var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 0);
+    var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 1);
     var index = pinButtons.indexOf(element);
 
     if (index === 0) {
@@ -28,13 +28,15 @@
       closeCard();
     }
 
-    mapFilter.insertAdjacentElement('beforeBegin', window.card.render(window.data.offers[index - 1]));
+    window.loadOffersData(function (offers) {
+      mapFilter.insertAdjacentElement('beforeBegin', window.card.render(offers[index]));
 
-    document.addEventListener('keydown', onCardEscPress);
+      document.addEventListener('keydown', onCardEscPress);
 
-    var cardCloseButton = document.querySelector('.popup__close');
-    cardCloseButton.addEventListener('click', function () {
-      closeCard();
+      var cardCloseButton = document.querySelector('.popup__close');
+      cardCloseButton.addEventListener('click', function () {
+        closeCard();
+      });
     });
   };
 
@@ -61,9 +63,9 @@
     onMapClick: function (evt) {
       var element = evt.target;
 
-      if (element.classList.contains('map__pin')) {
+      if (element.classList.contains('map__pin') && !element.classList.contains('map__pin--main')) {
         openCard(element);
-      } else if (element.parentNode.classList.contains('map__pin')) {
+      } else if (element.parentNode.classList.contains('map__pin') && !element.parentNode.classList.contains('map__pin--main')) {
         element = element.parentNode;
         openCard(element);
       }

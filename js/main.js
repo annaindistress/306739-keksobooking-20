@@ -63,23 +63,27 @@
     window.form.timeOut.addEventListener('change', window.form.onChangeTime);
     window.form.type.addEventListener('change', window.form.onChangeType);
 
-    window.map.renderPinList(window.data.offers);
-    window.map.item.addEventListener('click', window.map.onMapClick);
+    window.loadOffersData(function (offers) {
+      window.map.renderPinList(offers);
+      window.map.item.addEventListener('click', window.map.onMapClick);
+    });
   };
 
   setInactiveState();
 
   window.move.pin.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
-      setActiveState();
       window.move.onMainPinPress(evt);
+
+      if (window.map.item.classList.contains('map--faded')) {
+        setActiveState();
+      }
     }
   });
 
   window.move.pin.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Enter') {
+    if (evt.key === 'Enter' && window.map.item.classList.contains('map--faded')) {
       setActiveState();
-      window.move.onMainPinPress(evt);
     }
   });
 })();

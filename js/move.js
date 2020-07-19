@@ -26,12 +26,16 @@
       return (coords.x + mainPinHalf) + ', ' + (coords.y + mainPinHalf);
     },
     onMainPinPress: function (evt) {
+      evt.preventDefault();
+
       var startCoords = {
         x: evt.clientX,
         y: evt.clientY
       };
 
       var onMouseMove = function (moveEvt) {
+        moveEvt.preventDefault();
+
         var shift = {
           x: startCoords.x - moveEvt.clientX,
           y: startCoords.y - moveEvt.clientY
@@ -61,7 +65,9 @@
         window.form.address.value = window.move.setAddress(true);
       };
 
-      var onMouseUp = function () {
+      var onMouseUp = function (upEvt) {
+        upEvt.preventDefault();
+
         document.removeEventListener('mousemove', onMouseMove);
         document.removeEventListener('mouseup', onMouseUp);
       };
