@@ -2,7 +2,6 @@
 
 (function () {
   var form = document.querySelector('.ad-form');
-  var formTitle = form.querySelector('#title');
   var formAddress = form.querySelector('#address');
   var formType = form.querySelector('#type');
   var formPrice = form.querySelector('#price');
@@ -10,8 +9,7 @@
   var formTimeOut = form.querySelector('#timeout');
   var formRoomNumber = form.querySelector('#room_number');
   var formCapacity = form.querySelector('#capacity');
-  var formFeaturesList = form.querySelector('.features');
-  var formDescription = form.querySelector('#description');
+  var formResetButton = form.querySelector('.ad-form__reset');
   var mapFilterForm = window.map.filter.querySelector('.map__filters');
 
   var toggleDisabled = function (element, isDisabled) {
@@ -22,14 +20,6 @@
 
     element.disabled = true;
     return element;
-  };
-
-  var clearFeatures = function () {
-    for (var i = 0; i < formFeaturesList.childNodes.length; i++) {
-      if (formFeaturesList.childNodes[i].tagName === 'INPUT') {
-        formFeaturesList.childNodes[i].checked = false;
-      }
-    }
   };
 
   var onChangeType = function () {
@@ -101,6 +91,12 @@
     formCapacity.setCustomValidity(errorMessage);
   };
 
+  var onResetButtonClick = function (evt) {
+    evt.preventDefault();
+    form.reset();
+    formAddress.value = window.move.setCurrentAddress(true);
+  };
+
   var setInactiveState = function () {
 
     if (!window.map.item.classList.contains('map--faded')) {
@@ -119,23 +115,16 @@
       toggleDisabled(form.childNodes[j]);
     }
 
+    form.reset();
+
     formAddress.value = window.move.setCurrentAddress();
 
-    formTitle.value = '';
-    formType.value = 'flat';
     formType.removeEventListener('change', onChangeType);
-    formPrice.value = '';
-    formTimeIn.value = '12:00';
     formTimeIn.removeEventListener('change', onChangeTime);
-    formTimeOut.value = '12:00';
     formTimeOut.removeEventListener('change', onChangeTime);
-    formRoomNumber.value = 1;
     formRoomNumber.removeEventListener('change', onChangeRoomCapacity);
-    formCapacity.value = 1;
     formCapacity.removeEventListener('change', onChangeRoomCapacity);
-    formDescription.value = '';
-
-    clearFeatures();
+    formResetButton.removeEventListener('click', onResetButtonClick);
 
     window.map.item.removeEventListener('click', window.map.onMapClick);
   };
@@ -160,6 +149,7 @@
     formTimeIn.addEventListener('change', onChangeTime);
     formTimeOut.addEventListener('change', onChangeTime);
     formType.addEventListener('change', onChangeType);
+    formResetButton.addEventListener('click', onResetButtonClick);
 
     window.loadOffersData(function (offers) {
       window.map.renderPinList(offers);
