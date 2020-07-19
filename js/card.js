@@ -6,8 +6,6 @@
 
   var cardTemplate = document.querySelector('#card').content;
 
-  // Функция отрисовки преимуществ места
-
   var renderCardFeatures = function (features) {
     var fragment = document.createDocumentFragment();
 
@@ -19,8 +17,6 @@
 
     return fragment;
   };
-
-  // Функция отрисовки изображений места
 
   var renderCardImages = function (images) {
     var fragment = document.createDocumentFragment();

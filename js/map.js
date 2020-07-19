@@ -5,16 +5,12 @@
   var mapFilter = document.querySelector('.map__filters-container');
   var pinList = document.querySelector('.map__pins');
 
-  // Функция, обрабатывающая нажатие на Esc
-
   var onCardEscPress = function (evt) {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       closeCard();
     }
   };
-
-  // Функция, открывающая карточку
 
   var openCard = function (element) {
     var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 1);
@@ -39,8 +35,6 @@
       });
     });
   };
-
-  // Функция, закрывающая карточку
 
   var closeCard = function () {
     var card = map.querySelector('.map__card');

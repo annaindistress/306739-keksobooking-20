@@ -119,7 +119,7 @@
       toggleDisabled(form.childNodes[j]);
     }
 
-    formAddress.value = window.move.setAddress();
+    formAddress.value = window.move.setCurrentAddress();
 
     formTitle.value = '';
     formType.value = 'flat';
@@ -153,7 +153,7 @@
       toggleDisabled(form.childNodes[j], true);
     }
 
-    formAddress.value = window.move.setAddress(true);
+    formAddress.value = window.move.setCurrentAddress(true);
 
     formRoomNumber.addEventListener('change', onChangeRoomCapacity);
     formCapacity.addEventListener('change', onChangeRoomCapacity);
