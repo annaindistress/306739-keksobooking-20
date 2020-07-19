@@ -48,8 +48,19 @@
     document.removeEventListener('keydown', onCardEscPress);
   };
 
+  var cleanMap = function () {
+    var pins = map.querySelectorAll('.map__pin');
+
+    for (var i = 0; i < pins.length; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pins[i].remove();
+      }
+    }
+  };
+
   window.map = {
     item: map,
+    pinList: pinList,
     filter: mapFilter,
     renderPinList: function (offerList) {
       var fragment = document.createDocumentFragment();
@@ -69,6 +80,7 @@
         element = element.parentNode;
         openCard(element);
       }
-    }
+    },
+    clean: cleanMap
   };
 })();

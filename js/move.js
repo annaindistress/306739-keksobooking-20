@@ -11,6 +11,9 @@
   var mainPinHalf = MAIN_PIN_WIDTH / 2;
   var pinMain = window.map.item.querySelector('.map__pin--main');
 
+  var mainPinStartX = getComputedStyle(pinMain).left;
+  var mainPinStartY = getComputedStyle(pinMain).top;
+
   window.move = {
     pin: pinMain,
     setAddress: function (isActive) {
@@ -74,6 +77,11 @@
 
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
+    },
+    setStartAddress: function () {
+      pinMain.style.top = mainPinStartY;
+      pinMain.style.left = mainPinStartX;
+      window.form.address.value = window.move.setAddress();
     }
   };
 })();
