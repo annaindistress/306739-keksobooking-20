@@ -152,7 +152,7 @@
     formResetButton.addEventListener('click', onResetButtonClick);
 
     window.backend.load(function (offers) {
-      window.map.renderPinList(offers);
+      window.pin.render(offers);
       window.map.item.addEventListener('click', window.map.onMapClick);
     });
   };

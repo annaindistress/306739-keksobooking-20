@@ -3,7 +3,6 @@
 (function () {
   var map = document.querySelector('.map');
   var mapFilter = document.querySelector('.map__filters-container');
-  var pinList = document.querySelector('.map__pins');
 
   var onCardEscPress = function (evt) {
     if (evt.key === 'Escape') {
@@ -56,17 +55,7 @@
 
   window.map = {
     item: map,
-    pinList: pinList,
     filter: mapFilter,
-    renderPinList: function (offerList) {
-      var fragment = document.createDocumentFragment();
-
-      for (var i = 0; i < offerList.length; i++) {
-        fragment.appendChild(window.pin.render(offerList[i]));
-      }
-
-      pinList.appendChild(fragment);
-    },
     onMapClick: function (evt) {
       var element = evt.target;
 
