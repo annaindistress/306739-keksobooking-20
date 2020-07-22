@@ -24,7 +24,7 @@
       closeCard();
     }
 
-    window.loadOffersData(function (offers) {
+    window.backend.load(function (offers) {
       mapFilter.insertAdjacentElement('beforeBegin', window.card.render(offers[index - 1]));
 
       document.addEventListener('keydown', onCardEscPress);

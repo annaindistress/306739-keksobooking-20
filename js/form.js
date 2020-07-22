@@ -151,7 +151,7 @@
     formType.addEventListener('change', onChangeType);
     formResetButton.addEventListener('click', onResetButtonClick);
 
-    window.loadOffersData(function (offers) {
+    window.backend.load(function (offers) {
       window.map.renderPinList(offers);
       window.map.item.addEventListener('click', window.map.onMapClick);
     });

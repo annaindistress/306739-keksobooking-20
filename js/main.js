@@ -21,6 +21,6 @@
 
   window.form.item.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.uploadUserInfo(new FormData(window.form.item), window.form.onSuccessFormUpload, window.form.onErrorFormUpload);
+    window.backend.save(new FormData(window.form.item), window.form.onSuccessFormUpload, window.form.onErrorFormUpload);
   });
 })();
