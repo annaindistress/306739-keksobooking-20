@@ -157,10 +157,19 @@
     });
   };
 
+  var mainPinStartX = getComputedStyle(window.pin.main).left;
+  var mainPinStartY = getComputedStyle(window.pin.main).top;
+
+  var setStartingAddress = function () {
+    window.pin.main.style.top = mainPinStartY;
+    window.pin.main.style.left = mainPinStartX;
+    formAddress.value = window.move.setCurrentAddress();
+  };
+
   var onSuccessFormUpload = function () {
     window.map.clean();
     setInactiveState();
-    window.move.setStartAddress();
+    setStartingAddress();
     window.message.success();
   };
 

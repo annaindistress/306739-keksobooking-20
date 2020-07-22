@@ -4,9 +4,13 @@
   var MAX_PIN_AMOUNT = 5;
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
+  var MAIN_PIN_WIDTH = 65;
+  var MAIN_PIN_HEIGHT = 85;
 
   var pinTemplate = document.querySelector('#pin').content;
   var pinList = document.querySelector('.map__pins');
+  var pinMain = document.querySelector('.map__pin--main');
+  var pinMainHalf = MAIN_PIN_WIDTH / 2;
 
   var renderPinItem = function (data) {
     var pinItem = pinTemplate.cloneNode(true).querySelector('button');
@@ -32,6 +36,9 @@
   };
 
   window.pin = {
+    main: pinMain,
+    mainHalfWidth: pinMainHalf,
+    mainHeight: MAIN_PIN_HEIGHT,
     render: renderPinList
   };
 })();

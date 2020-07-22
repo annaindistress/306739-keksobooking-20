@@ -3,7 +3,7 @@
 (function () {
   window.form.setInactiveState();
 
-  window.move.pin.addEventListener('mousedown', function (evt) {
+  window.pin.main.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
       window.move.onMainPinPress(evt);
 
@@ -13,7 +13,7 @@
     }
   });
 
-  window.move.pin.addEventListener('keydown', function (evt) {
+  window.pin.main.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter' && window.map.item.classList.contains('map--faded')) {
       window.form.setActiveState();
     }
