@@ -45,6 +45,17 @@
     document.removeEventListener('keydown', onCardEscPress);
   };
 
+  var onMapClick = function (evt) {
+    var element = evt.target;
+
+    if (element.classList.contains('map__pin') && !element.classList.contains('map__pin--main')) {
+      openCard(element);
+    } else if (element.parentNode.classList.contains('map__pin') && !element.parentNode.classList.contains('map__pin--main')) {
+      element = element.parentNode;
+      openCard(element);
+    }
+  };
+
   var cleanMap = function () {
     var pins = map.querySelectorAll('.map__pin');
 
@@ -60,16 +71,8 @@
   window.map = {
     item: map,
     filterContainer: mapFilter,
-    onMapClick: function (evt) {
-      var element = evt.target;
-
-      if (element.classList.contains('map__pin') && !element.classList.contains('map__pin--main')) {
-        openCard(element);
-      } else if (element.parentNode.classList.contains('map__pin') && !element.parentNode.classList.contains('map__pin--main')) {
-        element = element.parentNode;
-        openCard(element);
-      }
-    },
+    closeCard: closeCard,
+    onMapClick: onMapClick,
     clean: cleanMap
   };
 })();

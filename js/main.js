@@ -2,8 +2,16 @@
 
 (function () {
   var map = window.map.item;
-  var filterForm = window.map.filterContainer.querySelector('.map__filters');
+  var filterForm = window.filter.item;
   var mainForm = window.form.item;
+  var offers = [];
+
+  var onSuccessDataLoad = function (data) {
+    offers = data;
+
+    window.pin.render(offers);
+    map.addEventListener('click', window.map.onMapClick);
+  };
 
   var toggleDisabled = function (element, isDisabled) {
     if (isDisabled) {
@@ -35,6 +43,7 @@
     window.form.deactivate();
 
     map.removeEventListener('click', window.map.onMapClick);
+    filterForm.removeEventListener('change', window.filter.onChange);
   };
 
   var setActiveState = function () {
@@ -52,10 +61,8 @@
 
     window.form.activate();
 
-    window.backend.load(function (offers) {
-      window.pin.render(offers);
-      map.addEventListener('click', window.map.onMapClick);
-    });
+    window.backend.load(onSuccessDataLoad);
+    filterForm.addEventListener('change', window.filter.onChange);
   };
 
   var onSuccessFormUpload = function () {
