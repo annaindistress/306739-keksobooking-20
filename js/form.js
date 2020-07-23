@@ -10,17 +10,6 @@
   var formRoomNumber = form.querySelector('#room_number');
   var formCapacity = form.querySelector('#capacity');
   var formResetButton = form.querySelector('.ad-form__reset');
-  var mapFilterForm = window.map.filter.querySelector('.map__filters');
-
-  var toggleDisabled = function (element, isDisabled) {
-    if (isDisabled) {
-      element.disabled = false;
-      return element;
-    }
-
-    element.disabled = true;
-    return element;
-  };
 
   var onChangeType = function () {
     var type = formType.value;
@@ -97,24 +86,7 @@
     formAddress.value = window.move.setCurrentAddress(true);
   };
 
-  var setInactiveState = function () {
-
-    if (!window.map.item.classList.contains('map--faded')) {
-      window.map.item.classList.add('map--faded');
-    }
-
-    for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
-      toggleDisabled(mapFilterForm.childNodes[i]);
-    }
-
-    if (!form.classList.contains('ad-form--disabled')) {
-      form.classList.add('ad-form--disabled');
-    }
-
-    for (var j = 0; j < form.childNodes.length; j++) {
-      toggleDisabled(form.childNodes[j]);
-    }
-
+  var deactivateForm = function () {
     form.reset();
 
     formAddress.value = window.move.setCurrentAddress();
@@ -125,23 +97,9 @@
     formRoomNumber.removeEventListener('change', onChangeRoomCapacity);
     formCapacity.removeEventListener('change', onChangeRoomCapacity);
     formResetButton.removeEventListener('click', onResetButtonClick);
-
-    window.map.item.removeEventListener('click', window.map.onMapClick);
   };
 
-  var setActiveState = function () {
-    window.map.item.classList.remove('map--faded');
-
-    for (var i = 0; i < mapFilterForm.childNodes.length; i++) {
-      toggleDisabled(mapFilterForm.childNodes[i], true);
-    }
-
-    form.classList.remove('ad-form--disabled');
-
-    for (var j = 0; j < form.childNodes.length; j++) {
-      toggleDisabled(form.childNodes[j], true);
-    }
-
+  var activateForm = function () {
     formAddress.value = window.move.setCurrentAddress(true);
 
     formRoomNumber.addEventListener('change', onChangeRoomCapacity);
@@ -150,39 +108,12 @@
     formTimeOut.addEventListener('change', onChangeTime);
     formType.addEventListener('change', onChangeType);
     formResetButton.addEventListener('click', onResetButtonClick);
-
-    window.backend.load(function (offers) {
-      window.pin.render(offers);
-      window.map.item.addEventListener('click', window.map.onMapClick);
-    });
-  };
-
-  var mainPinStartX = getComputedStyle(window.pin.main).left;
-  var mainPinStartY = getComputedStyle(window.pin.main).top;
-
-  var setStartingAddress = function () {
-    window.pin.main.style.top = mainPinStartY;
-    window.pin.main.style.left = mainPinStartX;
-    formAddress.value = window.move.setCurrentAddress();
-  };
-
-  var onSuccessFormUpload = function () {
-    window.map.clean();
-    setInactiveState();
-    setStartingAddress();
-    window.message.success();
-  };
-
-  var onErrorFormUpload = function () {
-    window.message.error();
   };
 
   window.form = {
     item: form,
     address: formAddress,
-    setActiveState: setActiveState,
-    setInactiveState: setInactiveState,
-    onSuccessFormUpload: onSuccessFormUpload,
-    onErrorFormUpload: onErrorFormUpload
+    deactivate: deactivateForm,
+    activate: activateForm
   };
 })();

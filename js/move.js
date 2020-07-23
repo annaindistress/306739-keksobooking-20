@@ -9,6 +9,14 @@
   var pin = window.pin.main;
   var pinHalf = window.pin.mainHalfWidth;
   var pinHeight = window.pin.mainHeight;
+  var mainPinStartX = getComputedStyle(window.pin.main).left;
+  var mainPinStartY = getComputedStyle(window.pin.main).top;
+
+  var setStartingAddress = function () {
+    window.pin.main.style.top = mainPinStartY;
+    window.pin.main.style.left = mainPinStartX;
+    window.form.address.value = window.move.setCurrentAddress();
+  };
 
   var setCurrentAddress = function (isActive) {
     var coords = {
@@ -60,7 +68,7 @@
         pin.style.left = (pin.offsetLeft - shift.x) + 'px';
       }
 
-      window.form.address.value = window.move.setCurrentAddress(true);
+      window.form.address.value = setCurrentAddress(true);
     };
 
     var onMouseUp = function (upEvt) {
@@ -75,6 +83,7 @@
   };
 
   window.move = {
+    setStartingAddress: setStartingAddress,
     setCurrentAddress: setCurrentAddress,
     onMainPinPress: onMainPinPress
   };

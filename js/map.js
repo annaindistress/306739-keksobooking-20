@@ -2,7 +2,7 @@
 
 (function () {
   var map = document.querySelector('.map');
-  var mapFilter = document.querySelector('.map__filters-container');
+  var mapFilter = map.querySelector('.map__filters-container');
 
   var onCardEscPress = function (evt) {
     if (evt.key === 'Escape') {
@@ -37,7 +37,11 @@
 
   var closeCard = function () {
     var card = map.querySelector('.map__card');
-    card.remove();
+
+    if (card) {
+      card.remove();
+    }
+
     document.removeEventListener('keydown', onCardEscPress);
   };
 
@@ -55,7 +59,7 @@
 
   window.map = {
     item: map,
-    filter: mapFilter,
+    filterContainer: mapFilter,
     onMapClick: function (evt) {
       var element = evt.target;
 
