@@ -5,9 +5,11 @@
   var filterForm = document.querySelector('.map__filters');
   var mainForm = window.form.item;
   var offers = [];
+  var filteredOffers = [];
 
   var onSuccessDataLoad = function (data) {
     offers = data;
+    filteredOffers = data;
   };
 
   window.backend.load(onSuccessDataLoad);
@@ -15,8 +17,8 @@
   var onFilterChange = window.debounce(function () {
     window.map.closeCard();
     window.map.clean();
-    offers = window.filter(offers);
-    window.pin.render(offers);
+    filteredOffers = window.filter(offers, filterForm);
+    window.pin.render(filteredOffers);
   });
 
   var toggleDisabled = function (element, isDisabled) {
@@ -111,10 +113,10 @@
     var element = evt.target;
 
     if (element.classList.contains('map__pin') && !element.classList.contains('map__pin--main')) {
-      window.map.openCard(element, offers);
+      window.map.openCard(element, filteredOffers);
     } else if (element.parentNode.classList.contains('map__pin') && !element.parentNode.classList.contains('map__pin--main')) {
       element = element.parentNode;
-      window.map.openCard(element, offers);
+      window.map.openCard(element, filteredOffers);
     }
   };
 })();
