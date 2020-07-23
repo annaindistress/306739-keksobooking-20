@@ -2,16 +2,22 @@
 
 (function () {
   var map = window.map.item;
-  var filterForm = window.filter.item;
+  var filterForm = document.querySelector('.map__filters');
   var mainForm = window.form.item;
   var offers = [];
 
   var onSuccessDataLoad = function (data) {
     offers = data;
-
-    window.pin.render(offers);
-    map.addEventListener('click', window.map.onMapClick);
   };
+
+  window.backend.load(onSuccessDataLoad);
+
+  var onFilterChange = window.debounce(function () {
+    window.map.closeCard();
+    window.map.clean();
+    offers = window.filter(offers);
+    window.pin.render(offers);
+  });
 
   var toggleDisabled = function (element, isDisabled) {
     if (isDisabled) {
@@ -42,8 +48,8 @@
 
     window.form.deactivate();
 
-    map.removeEventListener('click', window.map.onMapClick);
-    filterForm.removeEventListener('change', window.filter.onChange);
+    map.removeEventListener('click', onMapClick);
+    filterForm.removeEventListener('change', onFilterChange);
   };
 
   var setActiveState = function () {
@@ -61,8 +67,10 @@
 
     window.form.activate();
 
-    window.backend.load(onSuccessDataLoad);
-    filterForm.addEventListener('change', window.filter.onChange);
+    window.pin.render(offers);
+    map.addEventListener('click', onMapClick);
+
+    filterForm.addEventListener('change', onFilterChange);
   };
 
   var onSuccessFormUpload = function () {
@@ -98,4 +106,15 @@
     evt.preventDefault();
     window.backend.save(new FormData(mainForm), onSuccessFormUpload, onErrorFormUpload);
   });
+
+  var onMapClick = function (evt) {
+    var element = evt.target;
+
+    if (element.classList.contains('map__pin') && !element.classList.contains('map__pin--main')) {
+      window.map.openCard(element, offers);
+    } else if (element.parentNode.classList.contains('map__pin') && !element.parentNode.classList.contains('map__pin--main')) {
+      element = element.parentNode;
+      window.map.openCard(element, offers);
+    }
+  };
 })();
