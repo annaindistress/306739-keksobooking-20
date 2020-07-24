@@ -84,6 +84,8 @@
     evt.preventDefault();
     form.reset();
     formAddress.value = window.move.setCurrentAddress(true);
+    window.images.clearAvatar();
+    window.images.clearPropertyPhoto();
   };
 
   var deactivateForm = function () {
