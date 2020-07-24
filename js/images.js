@@ -5,6 +5,7 @@
 
   var avatarChooser = document.querySelector('#avatar');
   var avatarPreview = document.querySelector('.ad-form-header__preview img');
+  var avatarDefault = avatarPreview.src;
   var properyPhotoChooser = document.querySelector('#images');
   var properyPhotoPreview = document.querySelector('.ad-form__photo');
 
@@ -53,10 +54,23 @@
     });
   };
 
+  var clearAvatar = function () {
+    avatarPreview.src = avatarDefault;
+  };
+
+  var clearPropertyPhoto = function () {
+    var photos = properyPhotoPreview.querySelectorAll('img');
+    photos.forEach(function (photo) {
+      photo.remove();
+    });
+  };
+
   window.images = {
     avatar: avatarChooser,
     onAvatarChange: onAvatarChange,
+    clearAvatar: clearAvatar,
     property: properyPhotoChooser,
-    onProperyPhotoChange: onProperyPhotoChange
+    onProperyPhotoChange: onProperyPhotoChange,
+    clearPropertyPhoto: clearPropertyPhoto
   };
 })();

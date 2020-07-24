@@ -88,6 +88,8 @@
 
   var deactivateForm = function () {
     form.reset();
+    window.images.clearAvatar();
+    window.images.clearPropertyPhoto();
 
     formAddress.value = window.move.setCurrentAddress();
 
