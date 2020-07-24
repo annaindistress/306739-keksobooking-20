@@ -84,10 +84,14 @@
     evt.preventDefault();
     form.reset();
     formAddress.value = window.move.setCurrentAddress(true);
+    window.images.clearAvatar();
+    window.images.clearPropertyPhoto();
   };
 
   var deactivateForm = function () {
     form.reset();
+    window.images.clearAvatar();
+    window.images.clearPropertyPhoto();
 
     formAddress.value = window.move.setCurrentAddress();
 
@@ -97,6 +101,8 @@
     formRoomNumber.removeEventListener('change', onChangeRoomCapacity);
     formCapacity.removeEventListener('change', onChangeRoomCapacity);
     formResetButton.removeEventListener('click', onResetButtonClick);
+    window.images.avatar.removeEventListener('change', window.images.onAvatarChange);
+    window.images.property.removeEventListener('change', window.images.onProperyPhotoChange);
   };
 
   var activateForm = function () {
@@ -108,6 +114,8 @@
     formTimeOut.addEventListener('change', onChangeTime);
     formType.addEventListener('change', onChangeType);
     formResetButton.addEventListener('click', onResetButtonClick);
+    window.images.avatar.addEventListener('change', window.images.onAvatarChange);
+    window.images.property.addEventListener('change', window.images.onProperyPhotoChange);
   };
 
   window.form = {
