@@ -22,13 +22,7 @@
   });
 
   var toggleDisabled = function (element, isDisabled) {
-    if (isDisabled) {
-      element.disabled = false;
-      return element;
-    }
-
-    element.disabled = true;
-    return element;
+    element.disabled = !isDisabled;
   };
 
   var setInactiveState = function () {
