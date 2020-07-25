@@ -12,7 +12,7 @@
     filteredOffers = data;
   };
 
-  window.backend.load(onSuccessDataLoad);
+  window.load(onSuccessDataLoad);
 
   var onFilterChange = window.debounce(function () {
     window.map.closeCard();
@@ -100,7 +100,7 @@
 
   mainForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(mainForm), onSuccessFormUpload, onErrorFormUpload);
+    window.load(onSuccessFormUpload, onErrorFormUpload, new FormData(mainForm));
   });
 
   var onMapClick = function (evt) {
