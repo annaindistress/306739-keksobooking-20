@@ -30,7 +30,6 @@
   var formTimeOut = form.querySelector('#timeout');
   var formRoomNumber = form.querySelector('#room_number');
   var formCapacity = form.querySelector('#capacity');
-  var formResetButton = form.querySelector('.ad-form__reset');
 
   var offerTypeToPrice = {
     'bungalo': 0,
@@ -92,14 +91,6 @@
     formCapacity.setCustomValidity(errorMessage);
   };
 
-  var onResetButtonClick = function (evt) {
-    evt.preventDefault();
-    form.reset();
-    formAddress.value = window.move.setCurrentAddress(true);
-    window.images.clearAvatar();
-    window.images.clearPropertyPhoto();
-  };
-
   var deactivateForm = function () {
     form.reset();
     window.images.clearAvatar();
@@ -112,7 +103,6 @@
     formTimeOut.removeEventListener('change', onChangeTime);
     formRoomNumber.removeEventListener('change', onChangeRoomCapacity);
     formCapacity.removeEventListener('change', onChangeRoomCapacity);
-    formResetButton.removeEventListener('click', onResetButtonClick);
     window.images.avatar.removeEventListener('change', window.images.onAvatarChange);
     window.images.property.removeEventListener('change', window.images.onProperyPhotoChange);
   };
@@ -125,7 +115,6 @@
     formTimeIn.addEventListener('change', onChangeTime);
     formTimeOut.addEventListener('change', onChangeTime);
     formType.addEventListener('change', onChangeType);
-    formResetButton.addEventListener('click', onResetButtonClick);
     window.images.avatar.addEventListener('change', window.images.onAvatarChange);
     window.images.property.addEventListener('change', window.images.onProperyPhotoChange);
   };

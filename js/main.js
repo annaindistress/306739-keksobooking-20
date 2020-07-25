@@ -4,15 +4,15 @@
   var map = window.map.item;
   var filterForm = document.querySelector('.map__filters');
   var mainForm = window.form.item;
+  var formResetButton = mainForm.querySelector('.ad-form__reset');
   var offers = [];
   var filteredOffers = [];
 
   var onSuccessDataLoad = function (data) {
     offers = data;
     filteredOffers = data;
+    window.pin.render(filteredOffers);
   };
-
-  window.load(onSuccessDataLoad);
 
   var onFilterChange = window.debounce(function () {
     window.map.closeCard();
@@ -43,12 +43,15 @@
     });
 
     window.form.deactivate();
-
+    window.map.clean();
     map.removeEventListener('click', onMapClick);
     filterForm.removeEventListener('change', onFilterChange);
+    formResetButton.removeEventListener('click', setInactiveState);
   };
 
   var setActiveState = function () {
+    window.load(onSuccessDataLoad);
+
     map.classList.remove('map--faded');
 
     filterForm.childNodes.forEach(function (element) {
@@ -62,11 +65,9 @@
     });
 
     window.form.activate();
-
-    window.pin.render(offers);
     map.addEventListener('click', onMapClick);
-
     filterForm.addEventListener('change', onFilterChange);
+    formResetButton.addEventListener('click', setInactiveState);
   };
 
   var onSuccessFormUpload = function () {

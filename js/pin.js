@@ -10,7 +10,7 @@
   var pinTemplate = document.querySelector('#pin').content;
   var pinList = document.querySelector('.map__pins');
   var pinMain = document.querySelector('.map__pin--main');
-  var pinMainHalf = MAIN_PIN_WIDTH / 2;
+  var pinMainHalf = Math.floor(MAIN_PIN_WIDTH / 2);
 
   var renderPinItem = function (data) {
     var pinItem = pinTemplate.cloneNode(true).querySelector('button');
