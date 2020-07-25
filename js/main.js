@@ -83,7 +83,7 @@
   setInactiveState();
 
   window.pin.main.addEventListener('mousedown', function (evt) {
-    if (evt.button === 0) {
+    if (window.util.isLeftMouseButton(evt)) {
       window.move.onMainPinPress(evt);
 
       if (map.classList.contains('map--faded')) {
@@ -93,7 +93,7 @@
   });
 
   window.pin.main.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Enter' && map.classList.contains('map--faded')) {
+    if (window.util.isEnter(evt) && map.classList.contains('map--faded')) {
       setActiveState();
     }
   });

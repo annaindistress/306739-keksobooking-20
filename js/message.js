@@ -7,7 +7,7 @@
   var errorButton;
 
   var onEscPress = function (evt) {
-    if (evt.key === 'Escape') {
+    if (window.util.isEscape(evt)) {
       if (mainSection.querySelector('.success')) {
         closeSuccessMessage();
         return;

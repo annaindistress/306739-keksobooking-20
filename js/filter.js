@@ -3,6 +3,10 @@
 (function () {
   var PRICE_LOW = 10000;
   var PRICE_HIGH = 50000;
+  var FILTER_DEFAULT_VALUE = 'any';
+  var FILTER_LOW_PRICE_VALUE = 'low';
+  var FILTER_MIDDLE_PRICE_VALUE = 'middle';
+  var FILTER_HIGHT_PRICE_VALUE = 'high';
 
   var type = document.querySelector('#housing-type');
   var price = document.querySelector('#housing-price');
@@ -13,18 +17,18 @@
   var filterByType = function (item) {
     var typeValue = type.value;
 
-    return typeValue !== 'any' ? item.offer.type === typeValue : [];
+    return typeValue !== FILTER_DEFAULT_VALUE ? item.offer.type === typeValue : [];
   };
 
   var filterByPrice = function (item) {
     var priceValue = price.value;
 
     switch (priceValue) {
-      case 'low':
+      case FILTER_LOW_PRICE_VALUE:
         return item.offer.price < PRICE_LOW;
-      case 'middle':
+      case FILTER_MIDDLE_PRICE_VALUE:
         return item.offer.price >= PRICE_LOW && item.offer.price <= PRICE_HIGH;
-      case 'high':
+      case FILTER_HIGHT_PRICE_VALUE:
         return item.offer.price > PRICE_HIGH;
       default:
         return [];
@@ -34,13 +38,13 @@
   var filterByRooms = function (item) {
     var roomsValue = roomsAmount.value;
 
-    return roomsValue !== 'any' ? item.offer.rooms === parseInt(roomsValue, 10) : [];
+    return roomsValue !== FILTER_DEFAULT_VALUE ? item.offer.rooms === parseInt(roomsValue, 10) : [];
   };
 
   var filterByGuests = function (item) {
     var guestsValue = guestsAmount.value;
 
-    return guestsValue !== 'any' ? item.offer.guests === parseInt(guestsValue, 10) : [];
+    return guestsValue !== FILTER_DEFAULT_VALUE ? item.offer.guests === parseInt(guestsValue, 10) : [];
   };
 
   var filterByFeatures = function (item) {

@@ -2,6 +2,9 @@
 
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var PROPERTY_PHOTO_SIDE = 70;
+  var PROPERTY_PHOTO_MARGIN = '0 10px 10px 0';
+  var PROPERTY_PHOTO_ALT = 'Фотография предложения';
 
   var avatarChooser = document.querySelector('#avatar');
   var avatarPreview = document.querySelector('.ad-form-header__preview img');
@@ -41,10 +44,10 @@
 
         reader.addEventListener('load', function () {
           var photo = document.createElement('img');
-          photo.width = 70;
-          photo.height = 70;
-          photo.style.margin = '0 10px 10px 0';
-          photo.scr = 'Фотографии предложения';
+          photo.width = PROPERTY_PHOTO_SIDE;
+          photo.height = PROPERTY_PHOTO_SIDE;
+          photo.style.margin = PROPERTY_PHOTO_MARGIN;
+          photo.alt = PROPERTY_PHOTO_ALT;
           photo.src = reader.result;
           properyPhotoPreview.appendChild(photo);
         });

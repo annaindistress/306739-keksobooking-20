@@ -1,11 +1,13 @@
 'use strict';
 
 (function () {
+  var MAIN_PIN_INDEX = 0;
+
   var map = document.querySelector('.map');
   var mapFilter = map.querySelector('.map__filters-container');
 
   var onCardEscPress = function (evt) {
-    if (evt.key === 'Escape') {
+    if (window.util.isEscape(evt)) {
       evt.preventDefault();
       closeCard();
     }
@@ -15,7 +17,7 @@
     var pinButtons = [].slice.call(map.querySelectorAll('.map__pin'), 0);
     var index = pinButtons.indexOf(element);
 
-    if (index === 0) {
+    if (index === MAIN_PIN_INDEX) {
       return;
     }
 

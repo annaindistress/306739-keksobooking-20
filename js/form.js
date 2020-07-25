@@ -1,6 +1,27 @@
 'use strict';
 
 (function () {
+  var ROOMS_CAPACITY = [
+    {
+      'rooms': 100,
+      'guests_max': 0
+    },
+    {
+      'rooms': 3,
+      'guests_min': 1
+    },
+    {
+      'rooms': 2,
+      'guests_max': 2,
+      'guests_min': 1
+    },
+    {
+      'rooms': 1,
+      'guests_max': 1,
+      'guests_min': 1
+    }
+  ];
+
   var form = document.querySelector('.ad-form');
   var formAddress = form.querySelector('#address');
   var formType = form.querySelector('#type');
@@ -11,34 +32,25 @@
   var formCapacity = form.querySelector('#capacity');
   var formResetButton = form.querySelector('.ad-form__reset');
 
+  var offerTypeToPrice = {
+    'bungalo': 0,
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000
+  };
+
   var onChangeType = function () {
     var type = formType.value;
 
-    switch (type) {
-      case 'bungalo':
-        formPrice.min = 0;
-        formPrice.placeholder = '0';
-        break;
-      case 'flat':
-        formPrice.min = 1000;
-        formPrice.placeholder = '1000';
-        break;
-      case 'house':
-        formPrice.min = 5000;
-        formPrice.placeholder = '5000';
-        break;
-      case 'palace':
-        formPrice.min = 10000;
-        formPrice.placeholder = '10000';
-        break;
-    }
+    formPrice.min = offerTypeToPrice[type];
+    formPrice.placeholder = offerTypeToPrice[type].toString();
   };
 
   var onChangeTime = function (evt) {
     var firstTime = evt.target;
     var secondTime = formTimeOut;
 
-    if (firstTime.id === 'timeout') {
+    if (firstTime.id === formTimeOut.id) {
       secondTime = formTimeIn;
     }
 
@@ -46,32 +58,32 @@
   };
 
   var onChangeRoomCapacity = function () {
-    var rooms = formRoomNumber.value;
-    var guests = formCapacity.value;
+    var rooms = Number(formRoomNumber.value);
+    var guests = Number(formCapacity.value);
     var errorMessage = '';
 
     switch (rooms) {
-      case '100':
-        if (guests > '0') {
+      case ROOMS_CAPACITY[0].rooms:
+        if (guests > ROOMS_CAPACITY[0]['guests_max']) {
           errorMessage = 'Такие места не подходят для размещения гостей';
         }
         break;
-      case '3':
-        if (guests < '1') {
+      case ROOMS_CAPACITY[1].rooms:
+        if (guests < ROOMS_CAPACITY[1]['guests_min']) {
           errorMessage = 'Количество гостей не может быть меньше 1';
         }
         break;
-      case '2':
-        if (guests < '1') {
+      case ROOMS_CAPACITY[2].rooms:
+        if (guests < ROOMS_CAPACITY[2]['guests_min']) {
           errorMessage = 'Количество гостей не может быть меньше 1';
-        } else if (guests > '2') {
+        } else if (guests > ROOMS_CAPACITY[2]['guests_max']) {
           errorMessage = 'Количество гостей не может быть больше 2';
         }
         break;
-      case '1':
-        if (guests < '1') {
+      case ROOMS_CAPACITY[3].rooms:
+        if (guests < ROOMS_CAPACITY[3]['guests_min']) {
           errorMessage = 'Количество гостей не может быть меньше 1';
-        } else if (guests > '1') {
+        } else if (guests > ROOMS_CAPACITY[2]['guests_max']) {
           errorMessage = 'Количество гостей не может быть больше 1';
         }
         break;
