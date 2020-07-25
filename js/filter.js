@@ -13,11 +13,7 @@
   var filterByType = function (item) {
     var typeValue = type.value;
 
-    if (typeValue !== 'any') {
-      return item.offer.type === typeValue;
-    }
-
-    return [];
+    return typeValue !== 'any' ? item.offer.type === typeValue : [];
   };
 
   var filterByPrice = function (item) {
@@ -38,21 +34,13 @@
   var filterByRooms = function (item) {
     var roomsValue = roomsAmount.value;
 
-    if (roomsValue !== 'any') {
-      return item.offer.rooms === parseInt(roomsValue, 10);
-    }
-
-    return [];
+    return roomsValue !== 'any' ? item.offer.rooms === parseInt(roomsValue, 10) : [];
   };
 
   var filterByGuests = function (item) {
     var guestsValue = guestsAmount.value;
 
-    if (guestsValue !== 'any') {
-      return item.offer.guests === parseInt(guestsValue, 10);
-    }
-
-    return [];
+    return guestsValue !== 'any' ? item.offer.guests === parseInt(guestsValue, 10) : [];
   };
 
   var filterByFeatures = function (item) {
