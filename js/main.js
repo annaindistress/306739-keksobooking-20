@@ -14,6 +14,11 @@
     window.pin.render(filteredOffers);
   };
 
+  var onErrorDataLoad = function () {
+    window.message.error(true);
+    setInactiveState();
+  };
+
   var onFilterChange = window.debounce(function () {
     window.map.closeCard();
     window.map.clean();
@@ -44,13 +49,14 @@
 
     window.form.deactivate();
     window.map.clean();
+    window.move.setStartingAddress();
     map.removeEventListener('click', onMapClick);
     filterForm.removeEventListener('change', onFilterChange);
     formResetButton.removeEventListener('click', setInactiveState);
   };
 
   var setActiveState = function () {
-    window.load(onSuccessDataLoad);
+    window.load(onSuccessDataLoad, onErrorDataLoad);
 
     map.classList.remove('map--faded');
 
@@ -68,12 +74,13 @@
     map.addEventListener('click', onMapClick);
     filterForm.addEventListener('change', onFilterChange);
     formResetButton.addEventListener('click', setInactiveState);
+
+    window.load(onSuccessDataLoad, onErrorDataLoad);
   };
 
   var onSuccessFormUpload = function () {
     window.map.clean();
     setInactiveState();
-    window.move.setStartingAddress();
     window.message.success();
   };
 

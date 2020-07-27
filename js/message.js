@@ -1,10 +1,13 @@
 'use strict';
 
 (function () {
+  var LOAD_ERROR_TEXT = 'Ошибка загрузки данных';
+
   var mainSection = document.querySelector('main');
   var successTemplate = document.querySelector('#success').content;
   var errorTemplate = document.querySelector('#error').content;
   var errorButton;
+  var errorMessage;
 
   var onEscPress = function (evt) {
     if (window.util.isEscape(evt)) {
@@ -40,8 +43,14 @@
     document.removeEventListener('keydown', onEscPress);
   };
 
-  var showErrorMessage = function () {
+  var showErrorMessage = function (isLoadDataError) {
     var errorElement = errorTemplate.cloneNode(true).querySelector('.error');
+
+    if (isLoadDataError) {
+      errorMessage = errorElement.querySelector('.error__message');
+      errorMessage.textContent = LOAD_ERROR_TEXT;
+    }
+
     mainSection.insertAdjacentElement('afterbegin', errorElement);
 
     errorButton = document.querySelector('.error__button');
